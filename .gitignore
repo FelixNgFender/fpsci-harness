@@ -1,0 +1,19 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# nvlatency logs
+*.log
+# nvlatency
+input-injector.exe
+# experiment results
+experiment
+# environment files
+*.env
