@@ -2,7 +2,7 @@ import os
 import logging
 
 
-def configure(logger: logging.Logger, filename: str | os.PathLike) -> None:
+def configure_log_to_file(logger: logging.Logger, filename: str | os.PathLike) -> None:
     logger.setLevel(logging.DEBUG)
 
     # Create a file handler for this module only

@@ -1,10 +1,17 @@
-from typing import Annotated, Literal
+from typing import Annotated
 import enum
 import pydantic
 import pydantic_settings
 import pathlib
-import harness.game as game
 import harness.constants as constants
+import harness.settings as settings
+
+
+class Game(enum.StrEnum):
+    """Add more games here"""
+
+    FITTS = "fitts_law"
+    RL = "rocket_league"
 
 
 class MonitoringChoice(enum.StrEnum):
@@ -54,9 +61,9 @@ class StartSettings(MonitorSettings):
     """Settings for latency experiment CLI."""
 
     games: Annotated[
-        list[game.Game],
+        list[settings.Game],
         pydantic.Field(description="Games to test"),
-    ] = list(game.Game)
+    ] = list(settings.Game)
     game_duration: Annotated[
         int,
         pydantic.Field(description="Duration of each game round (s)"),
@@ -86,4 +93,4 @@ class GameContext(StartSettings):
             description="Directory to save experiment results for this game"
         ),
     ]
-    game: Annotated[game.Game, pydantic.Field(description="The game being ran")]
+    game: Annotated[Game, pydantic.Field(description="The game being ran")]

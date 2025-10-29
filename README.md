@@ -33,9 +33,12 @@ RANDOMIZE_GAMES=False
 RANDOMIZE_LATENCIES=False
 GAME_DURATION=3
 ```
-
 This will make `harness start` emits extra debug logs, doesn't randomize games and latencies
 and each game round will last 3 seconds.
+
+## Formatting and Typecheck
+
+`uv format && ty check`
 
 ## Interesting folders to look at
 

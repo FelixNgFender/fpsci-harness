@@ -1,0 +1,19 @@
+{
+  "question": [
+    "Q1. Rate the quality of the previous game round",
+    "Q2. Is the experience acceptable?"
+  ],
+  "options": [
+    [
+      "Excellent",
+      "Good",
+      "Fair",
+      "Poor",
+      "Bad"
+    ],
+    [
+      "Yes",
+      "No"
+    ]
+  ]
+}
