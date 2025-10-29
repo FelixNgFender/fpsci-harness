@@ -1,6 +1,5 @@
 import random
 import os
-from datetime import datetime
 import shutil
 import logging
 import pydantic_settings
@@ -9,6 +8,7 @@ import rich.prompt
 from harness import settings
 from harness import utils
 from harness.flows import fitts
+from harness.flows import thanks
 
 logger = logging.getLogger(__name__)
 
@@ -42,25 +42,7 @@ def start(start_settings: settings.StartSettings) -> None:
                 fitts.start(ctx)
             case _:
                 raise RuntimeError("unknown game")
-
-
-# # #Testing end window
-# # cmd = 'python C:\\Users\\shengmei\\Desktop\\Flow\\Thanks\\thanks.py'
-# # os.system(cmd)
-
-
-def _synthesize():
-    path1 = "C:\\Users\\shengmei\\Documents\\Strange"
-    path2 = "C:\\Users\\shengmei\\Documents\\Valorant"
-    path3 = "C:\\Users\\shengmei\\Documents\\Rocket"
-    filename = datetime.now().strftime("T-%d-%b-%Y-(%H-%M-%S-%f)")
-    finalPath = f"C:\\Users\\shengmei\\Documents\\{filename}"
-    os.makedirs(finalPath)
-    shutil.move(path1, finalPath)
-    shutil.move(path2, finalPath)
-    shutil.move(path3, finalPath)
-    shutil.make_archive(filename, "zip", finalPath)
-    os.system("python C:\\Users\\shengmei\\Desktop\\Flow\\Thanks\\thanks.py")
+    thanks.popup_thank_you_banner()
 
 
 class Start(settings.StartSettings):
