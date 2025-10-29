@@ -1,18 +1,14 @@
-import random, os
-import time
+import random
+import os
 from datetime import datetime
 import shutil
-import enum
-import harness.flows.fitts as fitts
 import logging
-import pydantic
 import pydantic_settings
-import harness.settings as settings
-from rich import print
 import rich.logging
 import rich.prompt
-from typing import Annotated
-import harness.game as game_module
+from harness import settings
+from harness import utils
+from harness.flows import fitts
 
 logger = logging.getLogger(__name__)
 
@@ -34,18 +30,23 @@ def start(start_settings: settings.StartSettings) -> None:
     ) if start_settings.randomize_latencies else None
 
     logger.debug("testing game list %s", start_settings.games)
-    experiment_run_dir = start_settings.experiment_dir / datetime.now().strftime(
-        "%Y-%m-%d_%H-%M-%S"
-    )
+    experiment_run_dir = start_settings.experiment_dir / utils.current_datetime_str()
     for g in start_settings.games:
         game_dir = experiment_run_dir / g
-        ctx = settings.GameContext(**start_settings.dict(), game_dir=game_dir, game=g)
+        ctx = settings.GameContext(
+            **start_settings.model_dump(), game_dir=game_dir, game=g
+        )
         os.makedirs(ctx.game_dir, exist_ok=True)
         match g:
-            case game_module.Game.FITTS:
+            case settings.Game.FITTS:
                 fitts.start(ctx)
             case _:
                 raise RuntimeError("unknown game")
+
+
+# # #Testing end window
+# # cmd = 'python C:\\Users\\shengmei\\Desktop\\Flow\\Thanks\\thanks.py'
+# # os.system(cmd)
 
 
 def _synthesize():
@@ -75,12 +76,12 @@ class Monitor(settings.MonitorSettings):
 
     def cli_cmd(self) -> None:
         configure_logging(self)
-        match self.choice:
-            case MonitoringChoice.ALL:
+        match self.monitor_choice:
+            case settings.MonitoringChoice.ALL:
                 pass
-            case MonitoringChoice.KEYBOARD:
+            case settings.MonitoringChoice.KEYBOARD:
                 pass
-            case MonitoringChoice.MOUSE:
+            case settings.MonitoringChoice.MOUSE:
                 pass
             case _:
                 raise RuntimeError("unknown monitoring choice")

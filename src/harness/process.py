@@ -1,11 +1,7 @@
 import os
+import pathlib
 import subprocess
 import harness.constants as constants
-
-
-def kill_nvlatency() -> None:
-    # os.system("wmic process where \"name='RTSS.exe'\" delete")
-    pass
 
 
 def process_exists(name: str) -> bool:
@@ -28,7 +24,6 @@ def kill_process(p: subprocess.Popen) -> None:
 
 
 def start_process(url: str) -> subprocess.Popen:
-    print(url)
     return subprocess.Popen(f"start {url}", shell=True)
 
 
@@ -36,5 +31,25 @@ def is_media_player_alive() -> bool:
     return process_exists(constants.MEDIA_PLAYER_PROCESS_NAME)
 
 
-def play_valorant_tutorial() -> None:
-    os.startfile(constants.FITTS_TUTORIAL_PATH)
+def kill_chrome() -> None:
+    """WARNING: This will kill all Chrome instances"""
+    subprocess.Popen("taskkill /F /IM chrome.exe", shell=True)
+
+
+def start_nvlatency(
+    latency_ms: int,
+    stdout_log_path: str | pathlib.Path,
+    stderr_log_path: str | pathlib.Path,
+) -> subprocess.Popen:
+    stdout_log_path = pathlib.Path(stdout_log_path)
+    stderr_log_path = pathlib.Path(stderr_log_path)
+    return subprocess.Popen(
+        ["input-injector.exe", "--latency", "constant", str(latency_ms)],
+        stdout=open(stdout_log_path, "a"),
+        stderr=open(stderr_log_path, "a"),
+    )
+
+
+def kill_nvlatency() -> None:
+    # os.system("wmic process where \"name='RTSS.exe'\" delete")
+    pass
