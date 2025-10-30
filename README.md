@@ -15,6 +15,11 @@ uv venv
 .venv\Scripts\activate
 ```
 
+Sync UV:
+```shell
+uv sync
+```
+
 Start the harness CLI:
 
 ```shell
