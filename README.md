@@ -11,13 +11,8 @@ Make sure `input-injector.exe` is in the root of where you cloned this repo to.
 Activate virtual environment:
 
 ```shell
-uv venv
-.venv\Scripts\activate
-```
-
-Sync UV:
-```shell
 uv sync
+.venv\Scripts\activate
 ```
 
 Start the harness CLI:
