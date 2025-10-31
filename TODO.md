@@ -1,15 +1,16 @@
-decide latency levels we want to experiment
+P0: decide latency levels we want to experiment
 
-replace tutorial videos with ones we record
+P0: collect fitt's law csv when round completes
 
-embed tutorial videos straight in tkinter so no intermediate steps
+P0:replace tutorial videos with ones we record
+    (Note, tutorial is done for fitts law)
 
-make banners full screen
+P0: Make submit button for questionnare much bigger
 
-investigate why keyboard thread is not logging to file (logging to stdout instead, mouse thread is working properly)
+P1: embed tutorial videos straight in tkinter so no intermediate steps
 
-adapt qoe questionnaire to our questions
+P1: use correct banner instead of test round banner when switching rounds
 
-collect fitt's law csv when round completes
+P1: make banners full screen
 
-use correct banner instead of test round banner when switching rounds
+P2: adapt qoe questionnaire to our questions
