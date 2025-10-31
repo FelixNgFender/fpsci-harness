@@ -7,11 +7,11 @@ logger = logging.getLogger(__name__)
 
 
 def on_press(key):
-    logging.info("kb pressed, {0}".format(key))
+    logger.info("kb pressed, {0}".format(key))
 
 
 def on_release(key):
-    logging.info("kb released, {0}".format(key))
+    logger.info("kb released, {0}".format(key))
 
 
 def start(log_path: str | pathlib.Path) -> pynput.keyboard.Listener:
