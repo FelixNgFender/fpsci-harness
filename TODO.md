@@ -2,8 +2,6 @@ P0: decide latency levels we want to experiment
 
 P0: collect fitt's law csv when round completes
 
-P0: investigate why keyboard thread is not logging to file (logging to stdout instead, mouse thread is working properly)
-
 P0:replace tutorial videos with ones we record
     (Note, tutorial is done for fitts law)
 
