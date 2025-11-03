@@ -7,7 +7,7 @@ def popup_thank_you_banner() -> None:
     root = tk.Tk()
     root.title("Thank You")
     root.configure(bg="#FFFFFF")
-    root.geometry("550x300")
+    root.attributes("-fullscreen", True)
     root.resizable(False, False)
 
     # Fonts
@@ -15,8 +15,11 @@ def popup_thank_you_banner() -> None:
     button_font = font.Font(family="Helvetica", size=12, weight="bold")
 
     # Main message
+    container = tk.Frame(root, bg="#FFFFFF")
+    container.pack(expand=True)
+
     tk.Label(
-        root,
+        container,
         text="You’ve completed all rounds!\n\nThank you for participating!",
         font=title_font,
         fg="#000000",
@@ -26,7 +29,7 @@ def popup_thank_you_banner() -> None:
 
     # Close button
     tk.Button(
-        root,
+        container,
         text="Finish",
         font=button_font,
         bg="#0078D7",

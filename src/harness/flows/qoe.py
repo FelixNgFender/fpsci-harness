@@ -46,7 +46,8 @@ def popup_qoe_questionnaire(answer_path: str | pathlib.Path) -> None:
     master = tk.Tk()
     master.title("In-game Survey")
     master.configure(bg="#FFFFFF")
-    master.geometry("800x600")
+    # Fullscreen with centered content
+    master.attributes("-fullscreen", True)
     master.resizable(False, False)
     master.attributes("-topmost", True)
     master.protocol("WM_DELETE_WINDOW", disable_event)
@@ -57,8 +58,11 @@ def popup_qoe_questionnaire(answer_path: str | pathlib.Path) -> None:
     button_font = font.Font(family="Helvetica", size=12, weight="bold")
 
     # --- Layout ---
+    container = tk.Frame(master, bg="#FFFFFF")
+    container.pack(expand=True)
+
     tk.Label(
-        master,
+        container,
         text="In-game Survey",
         font=title_font,
         fg="#000000",
@@ -68,7 +72,7 @@ def popup_qoe_questionnaire(answer_path: str | pathlib.Path) -> None:
 
     # Q1
     tk.Label(
-        master,
+        container,
         text="Q1: Rate the quality of the previous round (1.0 - 5.0)",
         font=question_font,
         fg="#000000",
@@ -77,7 +81,7 @@ def popup_qoe_questionnaire(answer_path: str | pathlib.Path) -> None:
         justify="left",
     ).pack(pady=(20, 5))
 
-    entry_frame = tk.Frame(master, bg="#FFFFFF")
+    entry_frame = tk.Frame(container, bg="#FFFFFF")
     entry_frame.pack(pady=(0, 15))
     tk.Label(
         entry_frame, text="Enter here:", font=("Helvetica", 12), bg="#FFFFFF"
@@ -88,11 +92,11 @@ def popup_qoe_questionnaire(answer_path: str | pathlib.Path) -> None:
     img = Image.open(constants.QOE_CHART)
     img = img.resize((300, 200))
     img_tk = ImageTk.PhotoImage(img)
-    tk.Label(master, image=img_tk, bg="#FFFFFF").pack(pady=(10, 10))
+    tk.Label(container, image=img_tk, bg="#FFFFFF").pack(pady=(10, 10))
 
     # Q2
     tk.Label(
-        master,
+        container,
         text="Q2: Is the experience acceptable?",
         font=question_font,
         fg="#000000",
@@ -100,7 +104,7 @@ def popup_qoe_questionnaire(answer_path: str | pathlib.Path) -> None:
     ).pack(pady=(20, 10))
 
     btn1 = tk.IntVar(value=0)
-    radio_frame = tk.Frame(master, bg="#FFFFFF")
+    radio_frame = tk.Frame(container, bg="#FFFFFF")
     radio_frame.pack(pady=(0, 20))
 
     tk.Radiobutton(
@@ -125,14 +129,14 @@ def popup_qoe_questionnaire(answer_path: str | pathlib.Path) -> None:
 
     # Done Button
     tk.Button(
-        master,
+        container,
         text="Submit",
-        font=button_font,
+        font=("Helvetica", 16, "bold"),
         bg="#0078D7",
         fg="#FFFFFF",
         activebackground="#005A9E",
         activeforeground="#FFFFFF",
-        width=14,
+        width=16,
         height=2,
         relief="flat",
         borderwidth=0,

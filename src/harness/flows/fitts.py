@@ -55,16 +55,20 @@ def popup_start_banner() -> None:
     root = tk.Tk()
     root.title("Fitts' Law Experiment")
     root.configure(bg="#FFFFFF")
-    root.geometry("500x300")
+    root.attributes("-fullscreen", True)
     root.resizable(False, False)
 
     # Custom fonts
     title_font = font.Font(family="Helvetica", size=22, weight="bold")
     subtitle_font = font.Font(family="Helvetica", size=12)
 
+    # Center container
+    container = tk.Frame(root, bg="#FFFFFF")
+    container.pack(expand=True)
+
     # Title label
     tk.Label(
-        root,
+        container,
         text="Welcome to the Fitts' Law Game!",
         font=title_font,
         bg="#FFFFFF",
@@ -73,7 +77,7 @@ def popup_start_banner() -> None:
 
     # Subtitle text
     tk.Label(
-        root,
+        container,
         text="Test your speed and accuracy.\nClick 'Start' to begin.",
         font=subtitle_font,
         bg="#FFFFFF",
@@ -83,7 +87,7 @@ def popup_start_banner() -> None:
 
     # Start button
     start_button = tk.Button(
-        root,
+        container,
         text="Start",
         font=("Helvetica", 14, "bold"),
         bg="#0078D7",
@@ -126,7 +130,10 @@ def play_round(
     start_fitts_process()
     time.sleep(2)
     logger.info("starting test round" if is_test else "starting round")
-    test_round.popup_test_round_start_banner()
+    if is_test:
+        test_round.popup_test_round_start_banner()
+    else:
+        test_round.popup_round_start_banner()
     if latency_ms is not None:
         kb_thread = keyboard.start(results_dir / constants.KEYBOARD_LOG)
         mouse_thread = mouse.start(results_dir / constants.MOUSE_LOG)
@@ -147,7 +154,10 @@ def play_round(
             else constants.ROUND_END_SCREENSHOT
         )
     )
-    test_round.popup_test_round_end_banner()
+    if is_test:
+        test_round.popup_test_round_end_banner()
+    else:
+        test_round.popup_round_end_banner()
     logger.info("test round ended" if is_test else "rounded ended")
     process.kill_chrome()
     if latency_ms:

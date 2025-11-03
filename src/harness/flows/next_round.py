@@ -7,13 +7,16 @@ def popup_next_round_banner() -> None:
     root = tk.Tk()
     root.title("Next Round")
     root.configure(bg="#FFFFFF")
-    root.geometry("550x300")
+    root.attributes("-fullscreen", True)
     root.resizable(False, False)
     title_font = font.Font(family="Helvetica", size=22, weight="bold")
     button_font = font.Font(family="Helvetica", size=12, weight="bold")
 
+    container = tk.Frame(root, bg="#FFFFFF")
+    container.pack(expand=True)
+
     tk.Label(
-        root,
+        container,
         text="Please go back to the game\nfor another round",
         font=title_font,
         fg="#000000",
@@ -22,7 +25,7 @@ def popup_next_round_banner() -> None:
     ).pack(pady=(70, 40))
 
     tk.Button(
-        root,
+        container,
         text="Continue",
         font=button_font,
         bg="#0078D7",
