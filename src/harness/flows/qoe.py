@@ -46,7 +46,7 @@ def popup_qoe_questionnaire(answer_path: str | pathlib.Path) -> None:
     master = tk.Tk()
     master.title("In-game Survey")
     master.configure(bg="#FFFFFF")
-    master.geometry("800x600")
+    master.geometry(constants.FULL_SCREEN)
     master.resizable(False, False)
     master.attributes("-topmost", True)
     master.protocol("WM_DELETE_WINDOW", disable_event)

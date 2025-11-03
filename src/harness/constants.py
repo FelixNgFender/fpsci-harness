@@ -4,8 +4,8 @@ import pathlib
 DEFAULT_EXPERIMENT_PATH = pathlib.Path("experiment")
 ASSETS_DIR = pathlib.Path("assets")
 """Contains tutorial videos and banner images"""
-MEDIA_PLAYER_PROCESS_NAME = "Microsoft.Media.Player.exe"
 DATEFMT_STR = "%Y-%m-%d_%H-%M-%S"
+FULL_SCREEN = "1920x1080"
 
 # Experiment result artifact names
 TEST_ROUND_END_SCREENSHOT = "test_round_end.png"

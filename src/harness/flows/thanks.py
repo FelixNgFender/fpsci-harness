@@ -1,14 +1,15 @@
 import tkinter as tk
 from tkinter import font
+from harness import constants
 
 
 def popup_thank_you_banner() -> None:
     """Display a clean thank-you banner after completing all rounds."""
-    root = tk.Tk()
-    root.title("Thank You")
-    root.configure(bg="#FFFFFF")
-    root.geometry("550x300")
-    root.resizable(False, False)
+    master = tk.Tk()
+    master.title("Thank You")
+    master.configure(bg="#FFFFFF")
+    master.geometry(constants.FULL_SCREEN)
+    master.resizable(False, False)
 
     # Fonts
     title_font = font.Font(family="Helvetica", size=22, weight="bold")
@@ -16,7 +17,7 @@ def popup_thank_you_banner() -> None:
 
     # Main message
     tk.Label(
-        root,
+        master,
         text="You’ve completed all rounds!\n\nThank you for participating!",
         font=title_font,
         fg="#000000",
@@ -26,7 +27,7 @@ def popup_thank_you_banner() -> None:
 
     # Close button
     tk.Button(
-        root,
+        master,
         text="Finish",
         font=button_font,
         bg="#0078D7",
@@ -37,9 +38,9 @@ def popup_thank_you_banner() -> None:
         height=2,
         relief="flat",
         borderwidth=0,
-        command=root.destroy,
+        command=master.destroy,
     ).pack()
 
     # Prevent accidental close
-    root.protocol("WM_DELETE_WINDOW", lambda: None)
-    root.mainloop()
+    master.protocol("WM_DELETE_WINDOW", lambda: None)
+    master.mainloop()

@@ -1,7 +1,6 @@
 import os
 import pathlib
 import subprocess
-import harness.constants as constants
 
 
 def process_exists(name: str) -> bool:
@@ -25,10 +24,6 @@ def kill_process(p: subprocess.Popen) -> None:
 
 def start_process(url: str) -> subprocess.Popen:
     return subprocess.Popen(f"start {url}", shell=True)
-
-
-def is_media_player_alive() -> bool:
-    return process_exists(constants.MEDIA_PLAYER_PROCESS_NAME)
 
 
 def kill_chrome() -> None:
