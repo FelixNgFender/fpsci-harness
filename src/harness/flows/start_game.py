@@ -1,7 +1,6 @@
 import tkinter as tk
 from tkinter import font
 from harness import video
-from harness import constants
 
 
 def popup_start_banner(
@@ -11,7 +10,7 @@ def popup_start_banner(
     master = tk.Tk()
     master.title(window_title)
     master.configure(bg="#FFFFFF")
-    master.geometry(constants.FULL_SCREEN)
+    master.attributes("-fullscreen", True)
     master.resizable(False, False)
 
     # Custom fonts

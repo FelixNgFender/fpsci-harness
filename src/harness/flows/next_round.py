@@ -1,6 +1,5 @@
 import tkinter as tk
 from tkinter import font
-from harness import constants
 
 
 def popup_next_round_banner() -> None:
@@ -8,7 +7,7 @@ def popup_next_round_banner() -> None:
     master = tk.Tk()
     master.title("Next Round")
     master.configure(bg="#FFFFFF")
-    master.geometry(constants.FULL_SCREEN)
+    master.attributes("-fullscreen", True)
     master.resizable(False, False)
     title_font = font.Font(family="Helvetica", size=22, weight="bold")
     button_font = font.Font(family="Helvetica", size=12, weight="bold")

@@ -26,11 +26,6 @@ def start_process(url: str) -> subprocess.Popen:
     return subprocess.Popen(f"start {url}", shell=True)
 
 
-def kill_chrome() -> None:
-    """WARNING: This will kill all Chrome instances"""
-    subprocess.Popen("taskkill /F /IM chrome.exe", shell=True)
-
-
 def start_nvlatency(
     latency_ms: int,
     stdout_log_path: str | pathlib.Path,
@@ -43,8 +38,3 @@ def start_nvlatency(
         stdout=open(stdout_log_path, "a"),
         stderr=open(stderr_log_path, "a"),
     )
-
-
-def kill_nvlatency() -> None:
-    # os.system("wmic process where \"name='RTSS.exe'\" delete")
-    pass

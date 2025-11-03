@@ -46,7 +46,7 @@ def popup_qoe_questionnaire(answer_path: str | pathlib.Path) -> None:
     master = tk.Tk()
     master.title("In-game Survey")
     master.configure(bg="#FFFFFF")
-    master.geometry(constants.FULL_SCREEN)
+    master.attributes("-fullscreen", True)
     master.resizable(False, False)
     master.attributes("-topmost", True)
     master.protocol("WM_DELETE_WINDOW", disable_event)
@@ -54,7 +54,7 @@ def popup_qoe_questionnaire(answer_path: str | pathlib.Path) -> None:
     # --- Fonts ---
     title_font = font.Font(family="Helvetica", size=22, weight="bold")
     question_font = font.Font(family="Helvetica", size=14)
-    button_font = font.Font(family="Helvetica", size=12, weight="bold")
+    button_font = font.Font(family="Helvetica", size=16, weight="bold")
 
     # --- Layout ---
     tk.Label(
@@ -132,7 +132,7 @@ def popup_qoe_questionnaire(answer_path: str | pathlib.Path) -> None:
         fg="#FFFFFF",
         activebackground="#005A9E",
         activeforeground="#FFFFFF",
-        width=14,
+        width=16,
         height=2,
         relief="flat",
         borderwidth=0,

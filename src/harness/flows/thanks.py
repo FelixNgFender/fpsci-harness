@@ -1,6 +1,5 @@
 import tkinter as tk
 from tkinter import font
-from harness import constants
 
 
 def popup_thank_you_banner() -> None:
@@ -8,7 +7,7 @@ def popup_thank_you_banner() -> None:
     master = tk.Tk()
     master.title("Thank You")
     master.configure(bg="#FFFFFF")
-    master.geometry(constants.FULL_SCREEN)
+    master.attributes("-fullscreen", True)
     master.resizable(False, False)
 
     # Fonts

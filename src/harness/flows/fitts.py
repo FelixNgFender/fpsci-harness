@@ -1,12 +1,14 @@
 import os
-import time
 import pyautogui
-import subprocess
 import logging
 import pathlib
+from selenium import webdriver
+from selenium.common import exceptions
+from selenium.webdriver.support import ui
+from selenium.webdriver.support import expected_conditions
+from selenium.webdriver.common.by import By
 from harness import settings
 from harness import logging as harness_logging
-from harness import process
 from harness.flows import qoe
 from harness.flows import start_game
 from harness.flows import next_round
@@ -32,6 +34,7 @@ def start(game_settings: settings.GameContext) -> None:
     )
     test_round_dir = game_settings.game_dir / f"{utils.current_datetime_str()}_test"
     os.makedirs(test_round_dir, exist_ok=True)
+
     play_round(
         test_round_dir,
         is_test=True,
@@ -50,11 +53,8 @@ def start(game_settings: settings.GameContext) -> None:
         )
         qoe.popup_qoe_questionnaire(round_dir / constants.QOE_ANSWERS)
         logger.info("qoe questionnaire taken")
+
     logger.info("data archived")
-
-
-def start_fitts_process() -> subprocess.Popen:
-    return process.start_process(constants.FITTS_URL)
 
 
 def play_round(
@@ -64,29 +64,48 @@ def play_round(
     latency_ms: int | None = None,
     is_test: bool = False,
 ) -> None:
-    # HACK: we cannot get a handle of a single chrome tab here so have to
-    # kill all Chrome instances at the end
-    start_fitts_process()
+    options = webdriver.ChromeOptions()
+    options.add_argument("--kiosk")  # cannot exit with F11, requires Alt+F4 to close
+    # disable the "Chrome is being controlled by automated test software" infobar
+    options.add_experimental_option("useAutomationExtension", False)
+    options.add_experimental_option("excludeSwitches", ["enable-automation"])
+    # disable download dialogue and set default download dir
+    options.add_experimental_option(
+        "prefs",
+        {
+            "download.default_directory": str(results_dir.resolve()),
+            "download.prompt_for_download": False,
+            "download.directory_upgrade": True,
+            "safebrowsing.enabled": True,  # ensures downloads are allowed
+        },
+    )
+    driver = webdriver.Chrome(options=options)
+    driver.get(constants.FITTS_URL)
+
     logger.info("starting test round" if is_test else "starting round")
     if is_test:
-        time.sleep(2)
         test_round.popup_test_round_start_banner()
 
     with monitoring.latency_context(results_dir, latency_ms):
-        # playing
-        time.sleep(duration_s)
-        # TODO: do we need to collect any stats here?
-        pyautogui.screenshot(
-            results_dir
-            / (
-                constants.TEST_ROUND_END_SCREENSHOT
-                if is_test
-                else constants.ROUND_END_SCREENSHOT
-            )
-        )
+        # collect stats
+        # wait until player is done or duration_s has elapsed, whichever comes first
+        try:
+            ui.WebDriverWait(driver, duration_s).until(
+                expected_conditions.element_to_be_clickable(
+                    (By.ID, constants.FITTS_DOWNLOAD_BTN_ID)
+                )
+            ).click()
+        except exceptions.TimeoutException:
+            logger.warning("unfinished fitts round")
+        pyautogui.screenshot(results_dir / constants.ROUND_END_SCREENSHOT)
 
-    logger.info("test round ended" if is_test else "rounded ended")
-    process.kill_chrome()
+    logger.info("test round ended" if is_test else "round ended")
+    driver.quit()
+    # rename results file if exists
+    if (results_dir / constants.FITTS_ORIGINAL_RESULTS).exists():
+        (results_dir / constants.FITTS_ORIGINAL_RESULTS).rename(
+            results_dir / constants.FITTS_RESULTS
+        )
+        logger.info("collected round result")
     if is_test:
-        time.sleep(1)
         test_round.popup_test_round_end_banner()

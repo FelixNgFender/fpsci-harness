@@ -1,6 +1,5 @@
 import tkinter as tk
 from tkinter import font
-from harness import constants
 
 
 def popup_test_round_start_banner() -> None:
@@ -8,7 +7,7 @@ def popup_test_round_start_banner() -> None:
     master = tk.Tk()
     master.title("Test Round")
     master.configure(bg="#FFFFFF")
-    master.geometry(constants.FULL_SCREEN)
+    master.attributes("-fullscreen", True)
     master.resizable(False, False)
 
     # Fonts
@@ -68,7 +67,7 @@ def popup_test_round_end_banner() -> None:
     master = tk.Tk()
     master.title("Test Round Ended")
     master.configure(bg="#FFFFFF")
-    master.geometry(constants.FULL_SCREEN)
+    master.attributes("-fullscreen", True)
     master.resizable(False, False)
 
     title_font = font.Font(family="Helvetica", size=24, weight="bold")
