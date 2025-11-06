@@ -12,7 +12,7 @@ class Game(enum.StrEnum):
     """Add more games here."""
 
     FITTS = "fitts_law"
-    FF = "feeding_frenzy"
+    FEEDIND_FRENZY = "feeding_frenzy"
     RL = "rocket_league"
 
 

@@ -9,7 +9,7 @@ import rich.logging
 import rich.prompt
 
 from harness import constants, settings, utils
-from harness.flows import fitts, thanks
+from harness.flows import feeding_frenzy, fitts, thanks
 from harness.monitoring import keyboard, mouse
 
 if TYPE_CHECKING:
@@ -41,6 +41,8 @@ def start(start_settings: settings.StartSettings) -> None:
         match g:
             case settings.Game.FITTS:
                 fitts.start(ctx)
+            case settings.Game.FEEDIND_FRENZY:
+                feeding_frenzy.start(ctx)
             case _:
                 msg = "unknown game"
                 raise RuntimeError(msg)

@@ -5,6 +5,7 @@ DEFAULT_EXPERIMENT_PATH = pathlib.Path("experiment")
 ASSETS_DIR = pathlib.Path("assets")
 """Contains tutorial videos and banner images"""
 DATEFMT_STR = "%Y-%m-%d_%H-%M-%S"
+TUTORIAL_NAME = "tutorial.mp4"
 
 # Experiment result artifact names
 ROUND_END_SCREENSHOT = "round_end.png"
@@ -23,7 +24,13 @@ QOE_CHART = QOE_DIR / "chart.jpg"
 FITTS_DIR = ASSETS_DIR / "fitts"
 FITTS_ORIGINAL_RESULTS = "Fitts Law Experiment - Computer Science Field Guide.csv"
 FITTS_RESULTS = "results.csv"
-FITTS_TUTORIAL_PATH = FITTS_DIR / "tutorial.mp4"
+FITTS_TUTORIAL_PATH = FITTS_DIR / TUTORIAL_NAME
 FITTS_URL = "https://www.csfieldguide.org.nz/en/interactives/fitts-law/"
 FITTS_DOWNLOAD_BTN_ID = "download-table-csv"
 FITTS_RESTART_BTN_ID = "play-again"
+
+FEEDING_FRENZY_DIR = ASSETS_DIR / "feeding-frenzy"
+FEEDING_FRENZY_TUTORIAL_PATH = FEEDING_FRENZY_DIR / TUTORIAL_NAME
+FEEDING_FRENZY_PROCESS_NAME = "popcapgame1.exe"
+FEEDING_FRENZY_SCORE_SCREENSHOT = "score.png"
+FEEDING_FRENZY_SCORE = "score.txt"

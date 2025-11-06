@@ -11,6 +11,7 @@ dependencies = [
     "pydantic-settings>=2.11.0",
     "pynput>=1.8.1",
     "pyscreeze>=1.0.1",
+    "pytesseract>=0.3.13",
     "python-vlc>=3.0.21203",
     "pywinauto>=0.6.9",
     "rich>=14.2.0",
