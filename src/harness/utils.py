@@ -1,6 +1,7 @@
-from datetime import datetime
+import datetime
+
 from harness import constants
 
 
 def current_datetime_str() -> str:
-    return datetime.now().strftime(constants.DATEFMT_STR)
+    return datetime.datetime.now(tz=datetime.UTC).strftime(constants.DATEFMT_STR)

@@ -1,16 +1,18 @@
-from typing import Annotated
 import enum
+import pathlib
+from typing import Annotated
+
 import pydantic
 import pydantic_settings
-import pathlib
-import harness.constants as constants
-import harness.settings as settings
+
+from harness import constants
 
 
 class Game(enum.StrEnum):
-    """Add more games here"""
+    """Add more games here."""
 
     FITTS = "fitts_law"
+    FF = "feeding_frenzy"
     RL = "rocket_league"
 
 
@@ -21,7 +23,7 @@ class MonitoringChoice(enum.StrEnum):
 
 
 class CleanSettings(pydantic_settings.BaseSettings):
-    """Settings for the `clean` CLI subcommand"""
+    """Settings for the `clean` CLI subcommand."""
 
     experiment_dir: Annotated[
         pathlib.Path,
@@ -36,7 +38,7 @@ class CleanSettings(pydantic_settings.BaseSettings):
 
 
 class MonitorSettings(pydantic_settings.BaseSettings):
-    """Settings for the `monitor` CLI subcommand"""
+    """Settings for the `monitor` CLI subcommand."""
 
     verbose: Annotated[
         pydantic_settings.CliImplicitFlag[bool],
@@ -51,7 +53,8 @@ class MonitorSettings(pydantic_settings.BaseSettings):
         pydantic.Field(description="Duration to monitor input devices (s)"),
     ] = 60
     experiment_dir: Annotated[
-        pathlib.Path, pydantic.Field(description="Location to store experiment results")
+        pathlib.Path,
+        pydantic.Field(description="Location to store experiment results"),
     ] = constants.DEFAULT_EXPERIMENT_PATH
 
     model_config = pydantic_settings.SettingsConfigDict(env_file=".env", extra="ignore")
@@ -61,9 +64,9 @@ class StartSettings(MonitorSettings):
     """Settings for latency experiment CLI."""
 
     games: Annotated[
-        list[settings.Game],
+        list[Game],
         pydantic.Field(description="Games to test"),
-    ] = list(settings.Game)
+    ] = list(Game)
     game_duration: Annotated[
         int,
         pydantic.Field(description="Duration of each game round (s)"),
@@ -85,12 +88,12 @@ class StartSettings(MonitorSettings):
 
 
 class GameContext(StartSettings):
-    """Add game-specific metadata to aid results tracking at runtime"""
+    """Add game-specific metadata to aid results tracking at runtime."""
 
     game_dir: Annotated[
         pathlib.Path,
         pydantic.Field(
-            description="Directory to save experiment results for this game"
+            description="Directory to save experiment results for this game",
         ),
     ]
     game: Annotated[Game, pydantic.Field(description="The game being ran")]

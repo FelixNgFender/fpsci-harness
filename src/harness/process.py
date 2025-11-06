@@ -4,10 +4,10 @@ import subprocess
 
 
 def process_exists(name: str) -> bool:
-    """Returns whether the process with the specified name exists"""
-    call = "TASKLIST", "/FI", "imagename eq %s" % name
+    """Return whether the process with the specified name exists."""
+    call = "TASKLIST", "/FI", f"imagename eq {name}"
     # use built-in check_output right away
-    output = subprocess.check_output(call).decode()
+    output = subprocess.check_output(call).decode()  # noqa: S603
     # check in last line for process name
     last_line = output.strip().split("\r\n")[-1]
     # because Fail message could be translated and is cropped at 25 chars
@@ -15,15 +15,15 @@ def process_exists(name: str) -> bool:
 
 
 def kill_process_name(name: str) -> None:
-    os.system(f"taskkill /f /im {name}")
+    os.system(f"taskkill /f /im {name}")  # noqa: S605
 
 
 def kill_process(p: subprocess.Popen) -> None:
-    subprocess.check_call(["taskkill", "/F", "/T", "/PID", str(p.pid)])
+    subprocess.check_call(["taskkill", "/F", "/T", "/PID", str(p.pid)])  # noqa: S603, S607
 
 
 def start_process(url: str) -> subprocess.Popen:
-    return subprocess.Popen(f"start {url}", shell=True)
+    return subprocess.Popen(f"start {url}", shell=True)  # noqa: S602
 
 
 def start_nvlatency(
@@ -33,8 +33,8 @@ def start_nvlatency(
 ) -> subprocess.Popen:
     stdout_log_path = pathlib.Path(stdout_log_path)
     stderr_log_path = pathlib.Path(stderr_log_path)
-    return subprocess.Popen(
-        ["input-injector.exe", "--latency", "constant", str(latency_ms)],
-        stdout=open(stdout_log_path, "a"),
-        stderr=open(stderr_log_path, "a"),
+    return subprocess.Popen(  # noqa: S603
+        ["input-injector.exe", "--latency", "constant", str(latency_ms)],  # noqa: S607
+        stdout=pathlib.Path.open(stdout_log_path, "a"),
+        stderr=pathlib.Path.open(stderr_log_path, "a"),
     )

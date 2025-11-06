@@ -2,37 +2,39 @@ import pathlib
 import tkinter as tk
 import tkinter.messagebox as mb
 from tkinter import font
+
 from PIL import Image, ImageTk
+
 from harness import constants
 
 
-def popup_qoe_questionnaire(answer_path: str | pathlib.Path) -> None:
-    def disable_event():
+def popup_qoe_questionnaire(answer_path: str | pathlib.Path) -> None:  # noqa: C901, PLR0915
+    def disable_event() -> None:
         pass
 
-    def store_ans():
-        with open(answer_path, "a") as log:
+    def store_ans() -> None:
+        with pathlib.Path(answer_path).open(mode="a") as log:
             log.write(f"QoE: {entry1.get()} : {btn1.get()},\n")
 
-    def force_answer1():
+    def force_answer1() -> None:
         mb.showinfo("Reminder", "Please answer Q1 with a number between 1.0 and 5.0")
 
-    def force_answer2():
+    def force_answer2() -> None:
         mb.showinfo("Reminder", "Please answer Q2")
 
     def check_ans1() -> bool:
         num = entry1.get().strip()
         try:
             val = float(num)
-            return 1.0 <= val <= 5.0
-        except Exception:
+        except ValueError:
             return False
+        return 1.0 <= val <= 5.0  # noqa: PLR2004
 
     def check_ans2() -> bool:
         val = btn1.get()
         return val in (1, 2)
 
-    def check_both():
+    def check_both() -> None:
         if not check_ans1():
             force_answer1()
             return
@@ -80,7 +82,10 @@ def popup_qoe_questionnaire(answer_path: str | pathlib.Path) -> None:
     entry_frame = tk.Frame(master, bg="#FFFFFF")
     entry_frame.pack(pady=(0, 15))
     tk.Label(
-        entry_frame, text="Enter here:", font=("Helvetica", 12), bg="#FFFFFF"
+        entry_frame,
+        text="Enter here:",
+        font=("Helvetica", 12),
+        bg="#FFFFFF",
     ).pack(side="left", padx=(0, 10))
     entry1 = tk.Entry(entry_frame, width=10, font=("Helvetica", 12))
     entry1.pack(side="left")

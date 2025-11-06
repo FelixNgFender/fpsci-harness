@@ -1,21 +1,22 @@
 import platform
-import vlc
 import tkinter as tk
+
+import vlc
 
 
 class Player(tk.Label):
-    def __init__(self, frame: tk.LabelFrame):
+    def __init__(self, frame: tk.LabelFrame) -> None:
         super().__init__()
         self.master = frame
         # Create a basic vlc instance
         self.instance = vlc.Instance()
         self.media = None
         # Create an empty vlc media player
-        self.mediaplayer = self.instance.media_player_new()
+        self.mediaplayer = self.instance.media_player_new()  # pyright: ignore[reportOptionalMemberAccess]
 
-    def open_file(self, file_name: str):
-        """Open a media file in a MediaPlayer"""
-        self.media = self.instance.media_new(file_name)
+    def open_file(self, file_name: str) -> None:
+        """Open a media file in a MediaPlayer."""
+        self.media = self.instance.media_new(file_name)  # pyright: ignore[reportOptionalMemberAccess]
         self.mediaplayer.set_media(self.media)
 
         # The media player has to be 'connected' to the Frame (otherwise the

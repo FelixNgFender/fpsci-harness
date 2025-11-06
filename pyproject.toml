@@ -20,8 +20,9 @@ dependencies = [
 
 [dependency-groups]
 dev = [
+    "pre-commit>=4.3.0",
+    "pyright>=1.1.407",
     "ruff>=0.14.2",
-    "ty>=0.0.1a25",
 ]
 
 [project.scripts]
@@ -30,3 +31,19 @@ harness = "harness:main"
 [build-system]
 requires = ["uv_build>=0.9.5,<0.10.0"]
 build-backend = "uv_build"
+
+[tool.ruff]
+line-length = 120
+lint.select = [
+    "ALL", # include all the rules, including new ones
+]
+lint.ignore = [
+    "D", # missing docstrings
+    "FBT003", # boolean positional value in function call
+    "COM812", # missing trailing comma, conflict with formatter
+]
+# https://github.com/astral-sh/ruff-vscode/blob/main/README.md#configuring-vs-code
+lint.extend-select = ["I"]
+
+[tool.pyright]
+typeCheckingMode = "standard"

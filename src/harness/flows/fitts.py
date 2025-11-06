@@ -1,29 +1,24 @@
-import os
-import pyautogui
 import logging
 import pathlib
+
+import pyautogui
 from selenium import webdriver
 from selenium.common import exceptions
-from selenium.webdriver.support import ui
-from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.common.by import By
-from harness import settings
+from selenium.webdriver.support import expected_conditions, ui
+
+from harness import constants, monitoring, settings, utils
 from harness import logging as harness_logging
-from harness.flows import qoe
-from harness.flows import start_game
-from harness.flows import next_round
-from harness.flows import test_round
-from harness import constants
-from harness import utils
-from harness import monitoring
+from harness.flows import next_round, qoe, start_game, test_round
 
 logger = logging.getLogger(__name__)
 
 
 def start(game_settings: settings.GameContext) -> None:
-    """Announce Fitt's law game, play a tutorial video, play the rounds with nvlatency"""
+    """Announce Fitt's law game, play a tutorial video, play the rounds with nvlatency."""
     harness_logging.configure_log_to_file(
-        logger, game_settings.game_dir / f"{game_settings.game}.stdout.csv"
+        logger,
+        game_settings.game_dir / f"{game_settings.game}.stdout.csv",
     )
     logger.debug("starting %s flow", str(game_settings.game))
     start_game.popup_start_banner(
@@ -33,7 +28,7 @@ def start(game_settings: settings.GameContext) -> None:
         tutorial_path=str(constants.FITTS_TUTORIAL_PATH),
     )
     test_round_dir = game_settings.game_dir / f"{utils.current_datetime_str()}_test"
-    os.makedirs(test_round_dir, exist_ok=True)
+    pathlib.Path(test_round_dir).mkdir(parents=True, exist_ok=True)
 
     play_round(
         test_round_dir,
@@ -42,10 +37,8 @@ def start(game_settings: settings.GameContext) -> None:
     )
     for latency_ms in game_settings.latencies:
         next_round.popup_next_round_banner()
-        round_dir = (
-            game_settings.game_dir / f"{utils.current_datetime_str()}_{latency_ms}ms"
-        )
-        os.makedirs(round_dir, exist_ok=True)
+        round_dir = game_settings.game_dir / f"{utils.current_datetime_str()}_{latency_ms}ms"
+        pathlib.Path(round_dir).mkdir(parents=True, exist_ok=True)
         play_round(
             round_dir,
             duration_s=game_settings.game_duration,
@@ -92,8 +85,8 @@ def play_round(
         try:
             ui.WebDriverWait(driver, duration_s).until(
                 expected_conditions.element_to_be_clickable(
-                    (By.ID, constants.FITTS_DOWNLOAD_BTN_ID)
-                )
+                    (By.ID, constants.FITTS_DOWNLOAD_BTN_ID),
+                ),
             ).click()
         except exceptions.TimeoutException:
             logger.warning("unfinished fitts round")
@@ -104,7 +97,7 @@ def play_round(
     # rename results file if exists
     if (results_dir / constants.FITTS_ORIGINAL_RESULTS).exists():
         (results_dir / constants.FITTS_ORIGINAL_RESULTS).rename(
-            results_dir / constants.FITTS_RESULTS
+            results_dir / constants.FITTS_RESULTS,
         )
         logger.info("collected round result")
     if is_test:

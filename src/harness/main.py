@@ -1,14 +1,19 @@
-import random
-import os
-import shutil
 import logging
+import pathlib
+import random
+import shutil
+from typing import TYPE_CHECKING
+
 import pydantic_settings
 import rich.logging
 import rich.prompt
-from harness import settings
-from harness import utils
-from harness.flows import fitts
-from harness.flows import thanks
+
+from harness import constants, settings, utils
+from harness.flows import fitts, thanks
+from harness.monitoring import keyboard, mouse
+
+if TYPE_CHECKING:
+    import pynput
 
 logger = logging.getLogger(__name__)
 
@@ -23,54 +28,61 @@ def configure_logging(log_settings: settings.MonitorSettings) -> None:
 
 
 def start(start_settings: settings.StartSettings) -> None:
-    """Randomize list of games in an experiment and match each with their respetive flow"""
+    """Randomize list of games in an experiment and match each with their respetive flow."""
     random.shuffle(start_settings.games) if start_settings.randomize_games else None
-    random.shuffle(
-        start_settings.latencies
-    ) if start_settings.randomize_latencies else None
+    random.shuffle(start_settings.latencies) if start_settings.randomize_latencies else None
 
     logger.debug("testing game list %s", start_settings.games)
     experiment_run_dir = start_settings.experiment_dir / utils.current_datetime_str()
     for g in start_settings.games:
         game_dir = experiment_run_dir / g
-        ctx = settings.GameContext(
-            **start_settings.model_dump(), game_dir=game_dir, game=g
-        )
-        os.makedirs(ctx.game_dir, exist_ok=True)
+        ctx = settings.GameContext(**start_settings.model_dump(), game_dir=game_dir, game=g)
+        pathlib.Path(ctx.game_dir).mkdir(parents=True, exist_ok=True)
         match g:
             case settings.Game.FITTS:
                 fitts.start(ctx)
             case _:
-                raise RuntimeError("unknown game")
+                msg = "unknown game"
+                raise RuntimeError(msg)
     thanks.popup_thank_you_banner()
 
 
 class Start(settings.StartSettings):
-    """Runs the harness and collects the results"""
+    """Runs the harness and collects the results."""
 
     def cli_cmd(self) -> None:
         configure_logging(self)
         start(self)
 
 
+def monitor(monitor_settings: settings.MonitorSettings) -> None:
+    monitoring_run_dir = monitor_settings.experiment_dir / utils.current_datetime_str()
+    pathlib.Path(monitoring_run_dir).mkdir(parents=True, exist_ok=True)
+    listeners: list[pynput.keyboard.Listener | pynput.mouse.Listener] = []
+    match monitor_settings.monitor_choice:
+        case settings.MonitoringChoice.ALL:
+            listeners.append(keyboard.start(monitoring_run_dir / constants.KEYBOARD_LOG))
+            listeners.append(mouse.start(monitoring_run_dir / constants.MOUSE_LOG))
+        case settings.MonitoringChoice.KEYBOARD:
+            listeners.append(keyboard.start(monitoring_run_dir / constants.KEYBOARD_LOG))
+        case settings.MonitoringChoice.MOUSE:
+            listeners.append(mouse.start(monitoring_run_dir / constants.MOUSE_LOG))
+
+    logger.info("Listener(s) running. Kill the currently running terminal if you want to stop.")
+    for listener in listeners:
+        listener.join()  # Blocks
+
+
 class Monitor(settings.MonitorSettings):
-    """Runs monitoring tools without running the games like the `start` command"""
+    """Runs monitoring tools without running the games like the `start` command."""
 
     def cli_cmd(self) -> None:
         configure_logging(self)
-        match self.monitor_choice:
-            case settings.MonitoringChoice.ALL:
-                pass
-            case settings.MonitoringChoice.KEYBOARD:
-                pass
-            case settings.MonitoringChoice.MOUSE:
-                pass
-            case _:
-                raise RuntimeError("unknown monitoring choice")
+        monitor(self)
 
 
 class Clean(settings.CleanSettings):
-    """Cleans experiment results directory"""
+    """Cleans experiment results directory."""
 
     def cli_cmd(self) -> None:
         if self.force or rich.prompt.Confirm.ask(

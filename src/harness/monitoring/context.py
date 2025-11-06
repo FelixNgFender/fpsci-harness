@@ -1,13 +1,13 @@
-import pathlib
 import contextlib
-from harness import constants
-from harness import process
-from harness.monitoring import keyboard
-from harness.monitoring import mouse
+import pathlib
+from collections.abc import Iterator
+
+from harness import constants, process
+from harness.monitoring import keyboard, mouse
 
 
 @contextlib.contextmanager
-def latency_context(results_dir: pathlib.Path, latency_ms: int | None):
+def latency_context(results_dir: pathlib.Path, latency_ms: int | None) -> Iterator[None]:
     if latency_ms is None:
         yield
         return

@@ -1,5 +1,5 @@
-import os
 import logging
+import os
 
 
 def configure_log_to_file(logger: logging.Logger, filename: str | os.PathLike) -> None:
@@ -11,7 +11,8 @@ def configure_log_to_file(logger: logging.Logger, filename: str | os.PathLike) -
 
     # Define formatter
     formatter = logging.Formatter(
-        "%(asctime)s.%(msecs)03d,%(levelname)s,%(message)s", "%Y-%m-%d:%H:%M:%S"
+        "%(asctime)s.%(msecs)03d,%(levelname)s,%(message)s",
+        "%Y-%m-%d:%H:%M:%S",
     )
     file_handler.setFormatter(formatter)
 

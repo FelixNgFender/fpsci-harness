@@ -17,7 +17,7 @@ def popup_thank_you_banner() -> None:
     # Main message
     tk.Label(
         master,
-        text="You’ve completed all rounds!\n\nThank you for participating!",
+        text="You've completed all rounds!\n\nThank you for participating!",
         font=title_font,
         fg="#000000",
         bg="#FFFFFF",
