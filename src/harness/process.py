@@ -2,6 +2,8 @@ import os
 import pathlib
 import subprocess
 
+from harness import constants
+
 
 def process_exists(name: str) -> bool:
     """Return whether the process with the specified name exists."""
@@ -22,10 +24,6 @@ def kill_process(p: subprocess.Popen) -> None:
     subprocess.check_call(["taskkill", "/F", "/T", "/PID", str(p.pid)])  # noqa: S603, S607
 
 
-def start_process(url: str) -> subprocess.Popen:
-    return subprocess.Popen(f"start {url}", shell=True)  # noqa: S602
-
-
 def start_nvlatency(
     latency_ms: int,
     stdout_log_path: str | pathlib.Path,
@@ -38,3 +36,10 @@ def start_nvlatency(
         stdout=pathlib.Path.open(stdout_log_path, "a"),
         stderr=pathlib.Path.open(stderr_log_path, "a"),
     )
+
+
+def start_steam_or_stop_if_not_exists() -> None:
+    if not process_exists(constants.STEAM_PROCESS):
+        subprocess.Popen([constants.STEAM_ABSOLUTE_PATH])  # noqa: S603
+        msg = "Please tell developer to setup Steam"
+        raise RuntimeError(msg)

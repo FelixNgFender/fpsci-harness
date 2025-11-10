@@ -8,7 +8,7 @@ import pydantic_settings
 import rich.logging
 import rich.prompt
 
-from harness import constants, settings, utils
+from harness import constants, process, settings, utils
 from harness.flows import feeding_frenzy, fitts, thanks
 from harness.monitoring import keyboard, mouse
 
@@ -29,6 +29,8 @@ def configure_logging(log_settings: settings.MonitorSettings) -> None:
 
 def start(start_settings: settings.StartSettings) -> None:
     """Randomize list of games in an experiment and match each with their respetive flow."""
+    process.start_steam_or_stop_if_not_exists()
+
     random.shuffle(start_settings.games) if start_settings.randomize_games else None
     random.shuffle(start_settings.latencies) if start_settings.randomize_latencies else None
 

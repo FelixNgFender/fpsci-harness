@@ -58,8 +58,7 @@ def play_round(
     if is_test:
         test_round.popup_test_round_start_banner()
 
-    steam = r"C:\Program Files (x86)\Steam\steam.exe"
-    subprocess.Popen([steam, "-applaunch", "3390", "-fullscreen", "-novid"])  # noqa: S603
+    subprocess.Popen([constants.STEAM_ABSOLUTE_PATH, "-applaunch", "3390", "-fullscreen", "-novid"])  # noqa: S603
     while is_not_in_main_menu():
         continue
 
@@ -87,10 +86,10 @@ def play_round(
         # collect stats
         pyautogui.screenshot(results_dir / constants.ROUND_END_SCREENSHOT)
         score_img = pyautogui.screenshot(region=(601, 5, 134, 31))
-        score_img.save("score.png")
+        score_img.save(results_dir / constants.FEEDING_FRENZY_SCORE_IMG)
 
     logger.info("test round ended" if is_test else "round ended")
-    process.kill_process_name(constants.FEEDING_FRENZY_PROCESS_NAME)
+    process.kill_process_name(constants.FEEDING_FRENZY_PROCESS)
     score = pytesseract.image_to_string(score_img)
     pathlib.Path(results_dir / constants.FEEDING_FRENZY_SCORE).write_text(score)
     logger.info("collected round result")

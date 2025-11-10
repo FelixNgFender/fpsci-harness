@@ -4,8 +4,6 @@ P0: decide latency levels we want to experiment
 
 P0: huy annotate what the pyautogui the feeding frenzy flows are doing
 
-P1: make sure steam is open before any flow
-
 P2: feeding frenzy choose an intermediate level?
 
 P2: adapt qoe questionnaire to our questions

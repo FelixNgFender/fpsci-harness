@@ -6,6 +6,8 @@ ASSETS_DIR = pathlib.Path("assets")
 """Contains tutorial videos and banner images"""
 DATEFMT_STR = "%Y-%m-%d_%H-%M-%S"
 TUTORIAL_NAME = "tutorial.mp4"
+STEAM_PROCESS = "steam.exe"
+STEAM_ABSOLUTE_PATH = r"C:\Program Files (x86)\Steam\steam.exe"
 
 # Experiment result artifact names
 ROUND_END_SCREENSHOT = "round_end.png"
@@ -31,6 +33,6 @@ FITTS_RESTART_BTN_ID = "play-again"
 
 FEEDING_FRENZY_DIR = ASSETS_DIR / "feeding-frenzy"
 FEEDING_FRENZY_TUTORIAL_PATH = FEEDING_FRENZY_DIR / TUTORIAL_NAME
-FEEDING_FRENZY_PROCESS_NAME = "popcapgame1.exe"
-FEEDING_FRENZY_SCORE_SCREENSHOT = "score.png"
+FEEDING_FRENZY_PROCESS = "popcapgame1.exe"
+FEEDING_FRENZY_SCORE_IMG = "score.png"
 FEEDING_FRENZY_SCORE = "score.txt"
