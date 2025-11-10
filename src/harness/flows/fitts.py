@@ -25,7 +25,7 @@ def start(game_settings: settings.GameContext) -> None:
         window_title="Fitts' Law Experiment",
         title="Welcome to the Fitts' Law Game!",
         description="Test your speed and accuracy.\nClick 'Start' to begin.",
-        tutorial_path=str(constants.FITTS_TUTORIAL_PATH),
+
     )
     test_round_dir = game_settings.game_dir / f"{utils.current_datetime_str()}_test"
     pathlib.Path(test_round_dir).mkdir(parents=True, exist_ok=True)

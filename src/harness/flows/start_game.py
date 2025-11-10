@@ -8,7 +8,6 @@ def popup_start_banner(
     window_title: str,
     title: str,
     description: str,
-    tutorial_path: str,
 ) -> None:
     """Display a banner announcing the start of the Fitts' Law game."""
     master = tk.Tk()
