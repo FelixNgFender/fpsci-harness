@@ -76,6 +76,7 @@ def play_round(
     pyautogui.moveTo(262, 129)
     pyautogui.click()
 
+    pyautogui.moveTo(392, 542)
     while is_in_game():
         continue
 
