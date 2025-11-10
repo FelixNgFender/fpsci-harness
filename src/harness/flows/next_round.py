@@ -8,6 +8,7 @@ def popup_next_round_banner() -> None:
     master.title("Next Round")
     master.configure(bg="#FFFFFF")
     master.attributes("-fullscreen", True)
+    master.attributes("-topmost", True)
     master.resizable(False, False)
     title_font = font.Font(family="Helvetica", size=22, weight="bold")
     button_font = font.Font(family="Helvetica", size=12, weight="bold")

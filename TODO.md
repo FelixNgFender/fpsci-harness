@@ -11,3 +11,5 @@ P2: feeding frenzy choose an intermediate level?
 P2: adapt qoe questionnaire to our questions
 
 P2: substitute placeholder feeding frenzy tutorial with actual one
+
+P2: tell player to hands off the mouse during frenzy start-up

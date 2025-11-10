@@ -8,6 +8,7 @@ def popup_thank_you_banner() -> None:
     master.title("Thank You")
     master.configure(bg="#FFFFFF")
     master.attributes("-fullscreen", True)
+    master.attributes("-topmost", True)
     master.resizable(False, False)
 
     # Fonts

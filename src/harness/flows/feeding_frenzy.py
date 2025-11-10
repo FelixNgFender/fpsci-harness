@@ -55,14 +55,13 @@ def play_round(
     latency_ms: int | None = None,
     is_test: bool = False,
 ) -> None:
-    steam = r"C:\Program Files (x86)\Steam\steam.exe"
-    subprocess.Popen([steam, "-applaunch", "3390", "-console", "-novid"])  # noqa: S603
-    while is_loading():
-        continue
-
-    logger.info("starting test round" if is_test else "starting round")
     if is_test:
         test_round.popup_test_round_start_banner()
+
+    steam = r"C:\Program Files (x86)\Steam\steam.exe"
+    subprocess.Popen([steam, "-applaunch", "3390", "-fullscreen", "-novid"])  # noqa: S603
+    while is_not_in_main_menu():
+        continue
 
     pyautogui.moveTo(379, 241)
     pyautogui.click()
@@ -70,11 +69,10 @@ def play_round(
     while is_resume() and is_level():
         continue
 
-    if is_resume:
-        pyautogui.moveTo(400, 345)
-        pyautogui.click()
-        while is_level():
-            continue
+    pyautogui.moveTo(400, 345)
+    pyautogui.click()
+    while is_level():
+        continue
 
     pyautogui.moveTo(262, 129)
     pyautogui.click()
@@ -82,6 +80,7 @@ def play_round(
     while is_in_game():
         continue
 
+    logger.info("starting test round" if is_test else "starting round")
     with monitoring.latency_context(results_dir, latency_ms):
         # wait until duration_s has elapsed
         time.sleep(duration_s)
@@ -91,7 +90,7 @@ def play_round(
         score_img.save("score.png")
 
     logger.info("test round ended" if is_test else "round ended")
-    kill_game()
+    process.kill_process_name(constants.FEEDING_FRENZY_PROCESS_NAME)
     score = pytesseract.image_to_string(score_img)
     pathlib.Path(results_dir / constants.FEEDING_FRENZY_SCORE).write_text(score)
     logger.info("collected round result")
@@ -99,7 +98,8 @@ def play_round(
         test_round.popup_test_round_end_banner()
 
 
-def is_loading() -> bool:
+def is_not_in_main_menu() -> bool:
+    """Returns whether the player is NOT in the main menu of feeding frenzy"""
     return pyautogui.pixel(640, 507) != (117, 87, 35) and pyautogui.pixel(761, 505) != (
         128,
         102,
@@ -129,7 +129,3 @@ def is_in_game() -> bool:
         140,
         96,
     )
-
-
-def kill_game() -> None:
-    process.kill_process_name(constants.FEEDING_FRENZY_PROCESS_NAME)

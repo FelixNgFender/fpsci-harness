@@ -8,6 +8,7 @@ def popup_test_round_start_banner() -> None:
     master.title("Test Round")
     master.configure(bg="#FFFFFF")
     master.attributes("-fullscreen", True)
+    master.attributes("-topmost", True)
     master.resizable(False, False)
 
     # Fonts

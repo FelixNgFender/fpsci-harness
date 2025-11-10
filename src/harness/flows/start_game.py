@@ -15,6 +15,7 @@ def popup_start_banner(
     master.title(window_title)
     master.configure(bg="#FFFFFF")
     master.attributes("-fullscreen", True)
+    master.attributes("-topmost", True)
     master.resizable(False, False)
 
     # Custom fonts
@@ -52,6 +53,7 @@ def popup_start_banner(
             master.destroy()
             player.mediaplayer.stop()
     else:
+
         def on_quit() -> None:
             master.destroy()
 
