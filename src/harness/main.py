@@ -9,7 +9,7 @@ import rich.logging
 import rich.prompt
 
 from harness import constants, process, settings, utils
-from harness.flows import feeding_frenzy, fitts, thanks
+from harness.flows import dave_the_diver, feeding_frenzy, fitts, rocket_league, thanks
 from harness.monitoring import keyboard, mouse
 
 if TYPE_CHECKING:
@@ -29,10 +29,13 @@ def configure_logging(log_settings: settings.MonitorSettings) -> None:
 
 def start(start_settings: settings.StartSettings) -> None:
     """Randomize list of games in an experiment and match each with their respetive flow."""
+    process.start_epic_games_or_stop_if_not_exists()
     process.start_steam_or_stop_if_not_exists()
 
-    random.shuffle(start_settings.games) if start_settings.randomize_games else None
-    random.shuffle(start_settings.latencies) if start_settings.randomize_latencies else None
+    if start_settings.randomize_games:
+        random.shuffle(start_settings.games)
+    if start_settings.randomize_latencies:
+        random.shuffle(start_settings.latencies)
 
     logger.debug("testing game list %s", start_settings.games)
     experiment_run_dir = start_settings.experiment_dir / utils.current_datetime_str()
@@ -45,9 +48,10 @@ def start(start_settings: settings.StartSettings) -> None:
                 fitts.start(ctx)
             case settings.Game.FEEDIND_FRENZY:
                 feeding_frenzy.start(ctx)
-            case _:
-                msg = "unknown game"
-                raise RuntimeError(msg)
+            case settings.Game.ROCKET_LEAGUE:
+                rocket_league.start(ctx)
+            case settings.Game.DAVE_THE_DIVER:
+                dave_the_diver.start(ctx)
     thanks.popup_thank_you_banner()
 
 

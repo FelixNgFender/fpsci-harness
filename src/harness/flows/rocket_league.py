@@ -4,7 +4,6 @@ import subprocess
 import time
 
 import pyautogui
-import pytesseract
 
 from harness import constants, monitoring, process, settings, utils
 from harness import logging as harness_logging
@@ -20,12 +19,18 @@ def start(game_settings: settings.GameContext) -> None:
     )
     logger.debug("starting %s flow", str(game_settings.game))
     start_game.popup_start_banner(
-        window_title="Feeding Frenzy 2",
-        title="Feeding Frenzy 2",
+        window_title="Rocket League",
+        title="Rocket League",
         description="TODO",
     )
     test_round_dir = game_settings.game_dir / f"{utils.current_datetime_str()}_test"
     pathlib.Path(test_round_dir).mkdir(parents=True, exist_ok=True)
+
+    # preload and re-use game for all rounds
+    subprocess.Popen([constants.STEAM_ABSOLUTE_PATH, constants.ROCKET_LEAGUE_STEAM_APP_ID, "-nomovie"])  # noqa: S603
+    time.sleep(constants.ROCKET_LEAGUE_STARTUP_TIME_S)
+    pyautogui.press("enter")  # enter menu
+    time.sleep(0.5)
 
     play_round(
         test_round_dir,
@@ -46,6 +51,9 @@ def start(game_settings: settings.GameContext) -> None:
         qoe.popup_qoe_questionnaire(round_dir / constants.QOE_ANSWERS)
         logger.info("qoe questionnaire taken")
 
+    process.kill_process_name(constants.ROCKET_LEAGUE_PROCESS)
+    # TODO: at the end: batch convert replay file to json using rrrocket.exe
+    # .\rrrocket.exe -m .\experiment\2025-11-10_21-17-30\rocket_league\
     logger.info("data archived")
 
 
@@ -56,84 +64,52 @@ def play_round(
     latency_ms: int | None = None,
     is_test: bool = False,
 ) -> None:
+    # assume to be in menu right now - go into custom match - pause game
+    pyautogui.press("right")
+    pyautogui.press("enter")  # enter play
+    time.sleep(0.5)
+    pyautogui.press("right")
+    pyautogui.press("enter")  # enter private match
+    time.sleep(0.5)
+    pyautogui.press("up")
+    pyautogui.press("up")
+    pyautogui.press("enter")  # enter create private match
+    time.sleep(0.5)
+    pyautogui.press("up")
+    pyautogui.press("down")
+    pyautogui.press("enter")  # enter create match
+    pyautogui.press("down")
+    pyautogui.press("down")
+    pyautogui.press("enter")  # enter create match with password
+    time.sleep(3)  # entering match
+    pyautogui.press("down")
+    pyautogui.press("enter")  # enter join orange
+    time.sleep(5)
+    pyautogui.press("esc")
+    pyautogui.press("down")
+    pyautogui.press("enter")  # enter pause game
+
     if is_test:
         test_round.popup_test_round_start_banner()
-
-    subprocess.Popen(  # noqa: S603
-        [
-            constants.STEAM_ABSOLUTE_PATH,
-            "-applaunch",
-            constants.FEEDING_FRENZY_STEAM_APP_ID,
-            *constants.FEEDING_FRENZY_FLAGS,
-        ]
-    )
-    while is_not_in_main_menu():
-        continue
-
-    pyautogui.moveTo(379, 241)
-    pyautogui.click()
-
-    while is_resume() and is_level():
-        continue
-
-    pyautogui.moveTo(400, 345)
-    pyautogui.click()
-    while is_level():
-        continue
-
-    pyautogui.moveTo(262, 129)
-    pyautogui.click()
-
-    pyautogui.moveTo(392, 542)
-    while is_in_game():
-        continue
 
     logger.info("starting test round" if is_test else "starting round")
     with monitoring.latency_context(results_dir, latency_ms):
         # wait until duration_s has elapsed
         time.sleep(duration_s)
         # collect stats
-        pyautogui.screenshot(results_dir / constants.ROUND_END_SCREENSHOT)
-        score_img = pyautogui.screenshot(region=(601, 5, 134, 31))
-        score_img.save(results_dir / constants.FEEDING_FRENZY_SCORE_IMG)
+        with pyautogui.hold("tab"):
+            pyautogui.screenshot(results_dir / constants.ROUND_END_SCREENSHOT)
 
     logger.info("test round ended" if is_test else "round ended")
-    process.kill_process_name(constants.FEEDING_FRENZY_PROCESS)
-    score = pytesseract.image_to_string(score_img)
-    pathlib.Path(results_dir / constants.FEEDING_FRENZY_SCORE).write_text(score)
+    # TODO: move replay from constants.ROCKET_LEAGUE_DEMO_DIR to results_dir
     logger.info("collected round result")
+
+    # pause and quit match to main menu
+    pyautogui.press("esc")  # pop up options
+    pyautogui.press("up")
+    pyautogui.press("enter")  # enter leave match
+    pyautogui.press("left")
+    pyautogui.press("enter")  # confirm leave match
+
     if is_test:
         test_round.popup_test_round_end_banner()
-
-
-def is_not_in_main_menu() -> bool:
-    """Returns whether the player is NOT in the main menu of feeding frenzy"""
-    return pyautogui.pixel(640, 507) != (117, 87, 35) and pyautogui.pixel(761, 505) != (
-        128,
-        102,
-        51,
-    )
-
-
-def is_resume() -> bool:
-    return pyautogui.pixel(272, 104) != (123, 94, 60) and pyautogui.pixel(526, 102) != (
-        155,
-        120,
-        82,
-    )
-
-
-def is_level() -> bool:
-    return pyautogui.pixel(35, 74) != (254, 247, 97) and pyautogui.pixel(137, 70) != (
-        251,
-        213,
-        92,
-    )
-
-
-def is_in_game() -> bool:
-    return pyautogui.pixel(299, 31) != (185, 143, 95) and pyautogui.pixel(529, 48) != (
-        181,
-        140,
-        96,
-    )

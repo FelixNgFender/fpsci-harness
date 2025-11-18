@@ -69,6 +69,7 @@ def popup_test_round_end_banner() -> None:
     master.title("Test Round Ended")
     master.configure(bg="#FFFFFF")
     master.attributes("-fullscreen", True)
+    master.attributes("-topmost", True)
     master.resizable(False, False)
 
     title_font = font.Font(family="Helvetica", size=24, weight="bold")

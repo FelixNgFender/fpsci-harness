@@ -13,7 +13,8 @@ class Game(enum.StrEnum):
 
     FITTS = "fitts_law"
     FEEDIND_FRENZY = "feeding_frenzy"
-    RL = "rocket_league"
+    ROCKET_LEAGUE = "rocket_league"
+    DAVE_THE_DIVER = "dave_the_diver"
 
 
 class MonitoringChoice(enum.StrEnum):

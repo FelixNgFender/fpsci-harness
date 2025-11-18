@@ -4,6 +4,7 @@ import subprocess
 import time
 
 import pyautogui
+import pydirectinput
 import pytesseract
 
 from harness import constants, monitoring, process, settings, utils
@@ -20,17 +21,28 @@ def start(game_settings: settings.GameContext) -> None:
     )
     logger.debug("starting %s flow", str(game_settings.game))
     start_game.popup_start_banner(
-        window_title="Feeding Frenzy 2",
-        title="Feeding Frenzy 2",
+        window_title="Dave the Diver",
+        title="Dave the Diver",
         description="TODO",
     )
     test_round_dir = game_settings.game_dir / f"{utils.current_datetime_str()}_test"
     pathlib.Path(test_round_dir).mkdir(parents=True, exist_ok=True)
 
+    # preload and re-use game for all rounds
+    subprocess.Popen(  # noqa: S603
+        [
+            constants.STEAM_ABSOLUTE_PATH,
+            "-applaunch",
+            constants.DAVE_THE_DIVER_STEAM_APP_ID,
+            *constants.DAVE_THE_DIVER_FLAGS,
+        ],
+    )
+
     play_round(
         test_round_dir,
-        is_test=True,
         duration_s=game_settings.game_duration,
+        is_test=True,
+        skip_menu=False,
     )
     qoe.popup_qoe_questionnaire(test_round_dir / constants.QOE_ANSWERS)
     logger.info("qoe questionnaire taken")
@@ -46,6 +58,7 @@ def start(game_settings: settings.GameContext) -> None:
         qoe.popup_qoe_questionnaire(round_dir / constants.QOE_ANSWERS)
         logger.info("qoe questionnaire taken")
 
+    process.kill_process_name(constants.DAVE_THE_DIVER_PROCESS)
     logger.info("data archived")
 
 
@@ -55,38 +68,34 @@ def play_round(
     duration_s: int,
     latency_ms: int | None = None,
     is_test: bool = False,
+    skip_menu: bool = True,
 ) -> None:
     if is_test:
         test_round.popup_test_round_start_banner()
 
-    subprocess.Popen(  # noqa: S603
-        [
-            constants.STEAM_ABSOLUTE_PATH,
-            "-applaunch",
-            constants.FEEDING_FRENZY_STEAM_APP_ID,
-            *constants.FEEDING_FRENZY_FLAGS,
-        ]
-    )
-    while is_not_in_main_menu():
+    process.focus_window(constants.DAVE_THE_DIVER_WINDOW)
+
+    if not skip_menu:
+        while is_not_in_menu():
+            time.sleep(1)
+            continue
+
+        pydirectinput.press("space")  # continue
+
+        while is_not_on_boat():
+            time.sleep(0.1)
+            continue
+
+    pydirectinput.press("space", presses=10, interval=0.1)  # more than 2 for resiliency
+    pydirectinput.keyDown("d")
+    while is_not_in_position():
         continue
+    pydirectinput.keyUp("d")
 
-    pyautogui.moveTo(379, 241)
-    pyautogui.click()
-
-    while is_resume() and is_level():
+    pydirectinput.keyDown("space")
+    while is_not_underwater():
         continue
-
-    pyautogui.moveTo(400, 345)
-    pyautogui.click()
-    while is_level():
-        continue
-
-    pyautogui.moveTo(262, 129)
-    pyautogui.click()
-
-    pyautogui.moveTo(392, 542)
-    while is_in_game():
-        continue
+    pydirectinput.keyUp("space")
 
     logger.info("starting test round" if is_test else "starting round")
     with monitoring.latency_context(results_dir, latency_ms):
@@ -94,46 +103,57 @@ def play_round(
         time.sleep(duration_s)
         # collect stats
         pyautogui.screenshot(results_dir / constants.ROUND_END_SCREENSHOT)
-        score_img = pyautogui.screenshot(region=(601, 5, 134, 31))
-        score_img.save(results_dir / constants.FEEDING_FRENZY_SCORE_IMG)
+        score_img = pyautogui.screenshot(region=(237, 972, 121, 34))
+        score_img.save(results_dir / constants.DAVE_THE_DIVER_SCORE_IMG)
 
     logger.info("test round ended" if is_test else "round ended")
-    process.kill_process_name(constants.FEEDING_FRENZY_PROCESS)
     score = pytesseract.image_to_string(score_img)
-    pathlib.Path(results_dir / constants.FEEDING_FRENZY_SCORE).write_text(score)
+    pathlib.Path(results_dir / constants.DAVE_THE_DIVER_SCORE).write_text(score)
     logger.info("collected round result")
+
+    # pause and return to boat
+    while is_not_in_escape_menu():
+        pydirectinput.press("esc", interval=0.1)
+    pydirectinput.press("`")
+    pydirectinput.keyDown("space")
+    time.sleep(2)
+    pydirectinput.keyUp("space")
+
     if is_test:
         test_round.popup_test_round_end_banner()
 
 
-def is_not_in_main_menu() -> bool:
-    """Returns whether the player is NOT in the main menu of feeding frenzy"""
-    return pyautogui.pixel(640, 507) != (117, 87, 35) and pyautogui.pixel(761, 505) != (
-        128,
-        102,
-        51,
+def is_not_in_menu() -> bool:
+    return pyautogui.pixel(637, 366) != (253, 241, 0) and pyautogui.pixel(1176, 354) != (253, 241, 0)
+
+
+def is_not_on_boat() -> bool:
+    return pyautogui.pixel(216, 90) != (250, 118, 0) and pyautogui.pixel(168, 90) != (
+        250,
+        118,
+        0,
     )
 
 
-def is_resume() -> bool:
-    return pyautogui.pixel(272, 104) != (123, 94, 60) and pyautogui.pixel(526, 102) != (
-        155,
-        120,
-        82,
-    )
-
-
-def is_level() -> bool:
-    return pyautogui.pixel(35, 74) != (254, 247, 97) and pyautogui.pixel(137, 70) != (
+def is_not_in_position() -> bool:
+    return pyautogui.pixel(939, 762) != (251, 199, 5) and pyautogui.pixel(778, 773) != (
         251,
-        213,
-        92,
+        207,
+        10,
     )
 
 
-def is_in_game() -> bool:
-    return pyautogui.pixel(299, 31) != (185, 143, 95) and pyautogui.pixel(529, 48) != (
-        181,
-        140,
-        96,
+def is_not_underwater() -> bool:
+    return pyautogui.pixel(166, 980) != (0, 174, 239) and pyautogui.pixel(91, 975) != (
+        0,
+        174,
+        239,
+    )
+
+
+def is_not_in_escape_menu() -> bool:
+    return pyautogui.pixel(166, 980) != (0, 42, 59) and pyautogui.pixel(91, 975) != (
+        0,
+        42,
+        59,
     )

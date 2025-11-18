@@ -1,6 +1,10 @@
+import contextlib
 import os
 import pathlib
 import subprocess
+import time
+
+import pyautogui
 
 from harness import constants
 
@@ -24,6 +28,15 @@ def kill_process(p: subprocess.Popen) -> None:
     subprocess.check_call(["taskkill", "/F", "/T", "/PID", str(p.pid)])  # noqa: S603, S607
 
 
+def focus_window(window_title: str, interval: float = 1) -> None:
+    while True:
+        with contextlib.suppress(IndexError):
+            win = pyautogui.getWindowsWithTitle(window_title)[0]  # pyright: ignore[reportAttributeAccessIssue]
+            win.activate()
+            return
+        time.sleep(interval)
+
+
 def start_nvlatency(
     latency_ms: int,
     stdout_log_path: str | pathlib.Path,
@@ -42,4 +55,11 @@ def start_steam_or_stop_if_not_exists() -> None:
     if not process_exists(constants.STEAM_PROCESS):
         subprocess.Popen([constants.STEAM_ABSOLUTE_PATH])  # noqa: S603
         msg = "Please tell developer to setup Steam"
+        raise RuntimeError(msg)
+
+
+def start_epic_games_or_stop_if_not_exists() -> None:
+    if not process_exists(constants.EPIC_GAMES_PROCESS):
+        subprocess.Popen([constants.EPIC_GAMES_ABSOLUTE_PATH])  # noqa: S603
+        msg = "Please tell developer to setup Epic Games"
         raise RuntimeError(msg)

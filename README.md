@@ -51,8 +51,6 @@ Run these lines before pushing any code to make sure our code is formatted prope
 
 `uv format && pyright`
 
-## Interesting folders to look at
+## Rocket League Parsing
 
-C:\Users\shengmei\Desktop\OLD STUFF\User-Study-Game-Performance-Analysis-ISU-main
-C:\Users\shengmei\Desktop\OLD STUFF\Flow
-C:\Users\shengmei\Desktop\OLD STUFF\TestingHarness
+Rocket League parsing is done by [`rrrocket`](https://github.com/nickbabcock/rrrocket). A Windows binary has to be provided at root.

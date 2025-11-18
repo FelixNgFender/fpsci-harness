@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Fitts’ Law Test</title>
+  <style>
+    :root {
+      --hitbox-w1: 40px;
+      --hitbox-w2: 80px;
+      --hitbox-w3: 160px;
+
+      --gap: 8px;
+      --bg: #0f0f0f;
+      --col-bg: #1b1b1b;
+      --accent: #c62828;
+      --text: #eaeaea;
+      --hud-bg: rgba(0, 0, 0, 0.45);
+      --hud-border: rgba(255, 255, 255, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    }
+
+    #task {
+      height: 100vh;
+      display: flex;
+      align-items: stretch;
+      position: relative;
+    }
+
+    .row {
+      flex: 1 1 auto;
+      display: flex;
+      gap: var(--gap);
+      padding: var(--gap);
+    }
+
+    .col {
+      position: relative;
+      flex: 1 1 0;
+      background: var(--col-bg);
+      border-radius: 8px;
+      overflow: hidden;
+      cursor: crosshair;
+      outline: 2px solid rgba(0, 0, 0, 0.4);
+      outline-offset: -1px;
+    }
+
+    .hitbox {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: var(--hitbox-w1);
+      background: transparent;
+      border-radius: 6px;
+    }
+
+    .hitbox.target {
+      background: var(--accent);
+    }
+
+    #hud {
+      position: fixed;
+      top: 12px;
+      left: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      font-size: 14px;
+      font-weight: 600;
+      background: var(--hud-bg);
+      border: 1px solid var(--hud-border);
+      border-radius: 10px;
+      user-select: none;
+      pointer-events: none;
+      z-index: 99999;
+      color: #fff;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, .7);
+    }
+
+    #hud .dot {
+      opacity: 0.7;
+    }
+
+    #controls {
+      position: fixed;
+      right: 12px;
+      bottom: 12px;
+      display: flex;
+      gap: 10px;
+      z-index: 2;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 10px 12px;
+      border: 0;
+      border-radius: 10px;
+      background: #222;
+      color: var(--text);
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      filter: brightness(1.15);
+    }
+  </style>
+</head>
+
+<body>
+  <div id="task">
+    <div id="hud">
+      <span id="trial-count">Trial 1</span>
+      <span class="dot">•</span>
+      <span id="click-count">Click 0</span>
+      <span class="dot">•</span>
+      <span id="timer">Time {{ time_limit }}s</span>
+    </div>
+
+    <div class="row" id="row">
+      <div class="col"></div>
+      <div class="col"></div>
+      <div class="col"></div>
+      <div class="col"></div>
+      <div class="col"></div>
+      <div class="col"></div>
+      <div class="col"></div>
+    </div>
+  </div>
+
+  <div id="controls">
+    <a id="btn-download" class="btn" href="#" download="fitts_per_click.csv">Download CSV</a>
+  </div>
+
+  <script type="text/javascript">
+    (function () {
+      const CLICKS_PER_TRIAL = 4;
+      const IGNORE_FIRST_FOR_AVG = true;
+      const WIDTHS_PX = [cssNumber('--hitbox-w1'), cssNumber('--hitbox-w2'), cssNumber('--hitbox-w3')];
+
+      let rowEl, cols, nCols = 0;
+      let downloadA;
+      let trialSpan, clickSpan, timerSpan;
+
+      let runId = "";
+      let trial = 1;
+      let successInTrial = 0;
+      let attemptsInTrial = 0;
+      let totalSuccessSoFar = 0;
+      let leftIdx = 0, rightIdx = 0;
+      let widthLevel = 0;
+      let side = 'left';
+      let appearTime = 0;
+      let prevCenterX = null;
+      let currCenterX = null;
+
+      let times = [], dists = [], widths = [];
+      let rows = [[
+        "run_id",
+        "trial", "attempt_in_trial", "success_index", "is_success", "ignored",
+        "target_side", "left_index", "right_index",
+        "width_px", "distance_px", "time_ms", "ID_bits",
+        "miss_px", "miss_dir", "click_x", "target_left_x", "target_right_x", "target_center_x"
+      ]];
+
+      // ===== Timer logic =====
+      let timerInterval = null;
+      let remainingSec = {{ time_limit }};
+
+    // ===== Audio =====
+    let _ctx = null;
+    function audioCtx() {
+      if (!_ctx) _ctx = new (window.AudioContext || window.webkitAudioContext)();
+      if (_ctx.state === 'suspended') _ctx.resume();
+      return _ctx;
+    }
+    function playSuccess() {
+      const ctx = audioCtx();
+      const osc = ctx.createOscillator();
+      const g = ctx.createGain();
+      const now = ctx.currentTime;
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(1000, now);
+      g.gain.setValueAtTime(0, now);
+      g.gain.linearRampToValueAtTime(0.15, now + 0.01);
+      g.gain.exponentialRampToValueAtTime(0.0001, now + 0.10);
+      osc.connect(g); g.connect(ctx.destination);
+      osc.start(now); osc.stop(now + 0.12);
+    }
+    function playMiss() {
+      const ctx = audioCtx();
+      const now = ctx.currentTime;
+      const dur = 0.10;
+      const buf = ctx.createBuffer(1, ctx.sampleRate * dur, ctx.sampleRate);
+      const data = buf.getChannelData(0);
+      for (let i = 0; i < data.length; i++) data[i] = (Math.random() * 2 - 1) * 0.4;
+      const src = ctx.createBufferSource(); src.buffer = buf;
+      const bp = ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 500; bp.Q.value = 0.9;
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0, now);
+      g.gain.linearRampToValueAtTime(0.12, now + 0.005);
+      g.gain.exponentialRampToValueAtTime(0.0001, now + dur);
+      src.connect(bp); bp.connect(g); g.connect(ctx.destination);
+      src.start(now); src.stop(now + dur + 0.02);
+      const osc = ctx.createOscillator();
+      const g2 = ctx.createGain();
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(220, now);
+      g2.gain.setValueAtTime(0, now);
+      g2.gain.linearRampToValueAtTime(0.08, now + 0.005);
+      g2.gain.exponentialRampToValueAtTime(0.0001, now + 0.12);
+      osc.connect(g2); g2.connect(ctx.destination);
+      osc.start(now); osc.stop(now + 0.14);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      rowEl = document.getElementById('row');
+      cols = Array.from(rowEl.children);
+      nCols = cols.length;
+      cols.forEach(col => {
+        const hb = document.createElement('div');
+        hb.className = 'hitbox';
+        col.appendChild(hb);
+      });
+      rowEl.addEventListener('click', onAttempt);
+
+      downloadA = document.getElementById('btn-download');
+      if (downloadA) downloadA.addEventListener('click', () => {
+        downloadA.download = freshFilename();
+      });
+
+      trialSpan = document.getElementById('trial-count');
+      clickSpan = document.getElementById('click-count');
+      timerSpan = document.getElementById('timer');
+
+      runId = randId(6);
+      updateDownloadLink();
+      startTrial();
+      startTimer(); // start countdown immediately
+    });
+
+    // ===== Timer countdown =====
+    function startTimer() {
+      updateTimerDisplay();
+      timerInterval = setInterval(() => {
+        remainingSec -= 1;
+        updateTimerDisplay();
+        if (remainingSec <= 0) {
+          clearInterval(timerInterval);
+          autoDownloadCSV();
+        }
+      }, 1000);
+    }
+
+    function updateTimerDisplay() {
+      if (timerSpan) timerSpan.textContent = `Time ${remainingSec}s`;
+    }
+
+    // ===== Trials =====
+    function startTrial() {
+      successInTrial = 0;
+      attemptsInTrial = 0;
+      times = []; dists = []; widths = [];
+      prevCenterX = null; currCenterX = null;
+      choosePairAndWidth();
+      side = Math.random() < 0.5 ? 'left' : 'right';
+      renderTarget();
+      updateHud();
+    }
+
+    function choosePairAndWidth() {
+      const maxPair = Math.floor((nCols - 1) / 2);
+      const pair = Math.floor(Math.random() * Math.max(1, maxPair));
+      leftIdx = pair;
+      rightIdx = nCols - 1 - pair;
+      widthLevel = Math.floor(Math.random() * 3);
+    }
+
+    function renderTarget() {
+      cols.forEach(col => {
+        const hb = col.querySelector('.hitbox');
+        hb.classList.remove('target');
+        hb.style.width = WIDTHS_PX[widthLevel] + 'px';
+      });
+      const targetIdx = (side === 'left') ? leftIdx : rightIdx;
+      const target = cols[targetIdx].querySelector('.hitbox');
+      target.classList.add('target');
+      appearTime = performance.now();
+      prevCenterX = currCenterX;
+      const rect = target.getBoundingClientRect();
+      currCenterX = rect.left + rect.width / 2 + window.scrollX;
+      updateDownloadLink();
+    }
+
+    function onAttempt(ev) {
+      audioCtx();
+      attemptsInTrial += 1;
+      const target = document.querySelector('.hitbox.target');
+      if (!target) return;
+      const rect = target.getBoundingClientRect();
+      const left = rect.left + window.scrollX;
+      const right = rect.right + window.scrollX;
+      const center = (left + right) / 2;
+      const clickX = ev.pageX;
+      const miss_px = (clickX < left) ? (left - clickX) : (clickX > right ? (clickX - right) : 0);
+      const miss_dir = miss_px === 0 ? "inside" : (clickX < left ? "left" : "right");
+      const is_success = (miss_px === 0);
+      const now = performance.now();
+      const timeMs = now - appearTime;
+      const widthPx = rect.width;
+      const distPx = (prevCenterX == null) ? 0 : Math.abs(currCenterX - prevCenterX);
+      const ID = widthPx > 0 ? Math.log2(distPx / widthPx + 1) : 0;
+      let successIndex = "";
+      let ignored = false;
+      if (is_success) {
+        playSuccess();
+        successInTrial += 1;
+        totalSuccessSoFar += 1;
+        successIndex = successInTrial;
+        ignored = (IGNORE_FIRST_FOR_AVG && successInTrial === 1);
+        if (!ignored) {
+          times.push(timeMs);
+          dists.push(distPx);
+          widths.push(widthPx);
+        }
+      } else {
+        playMiss();
+      }
+      rows.push([
+        runId, trial, attemptsInTrial, successIndex, is_success,
+        is_success ? ignored : false, side, leftIdx, rightIdx,
+        round2(widthPx), round2(distPx), round2(timeMs), round2(ID),
+        round2(miss_px), miss_dir, round2(clickX), round2(left),
+        round2(right), round2(center)
+      ]);
+      updateDownloadLink();
+      if (is_success) {
+        if (successInTrial >= CLICKS_PER_TRIAL) {
+          trial += 1;
+          startTrial(); // continue infinitely
+        } else {
+          side = (side === 'left') ? 'right' : 'left';
+          renderTarget();
+          updateHud();
+        }
+      } else {
+        updateHud();
+      }
+    }
+
+    function updateHud() {
+      if (trialSpan) trialSpan.textContent = `Trial ${trial}`;
+      if (clickSpan) clickSpan.textContent = `Click ${successInTrial}`;
+    }
+
+    function currentCSV() {
+      return rows.map(r => r.join(',')).join('\n');
+    }
+
+    function updateDownloadLink() {
+      if (!downloadA) return;
+      const blob = new Blob([currentCSV()], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      if (downloadA.dataset.url) {
+        try { URL.revokeObjectURL(downloadA.dataset.url); } catch { }
+      }
+      downloadA.href = url;
+      downloadA.dataset.url = url;
+    }
+
+    function autoDownloadCSV() {
+      updateDownloadLink();
+      downloadA.download = freshFilename();
+      downloadA.click();
+    }
+
+    function round2(x) { return Math.round(x * 100) / 100; }
+    function cssNumber(name) {
+      const v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+      return Number((v || '0').replace('px', '')) || 0;
+    }
+    function randId(n = 6) {
+      const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+      let out = '';
+      if (window.crypto && crypto.getRandomValues) {
+        const buf = new Uint32Array(n);
+        crypto.getRandomValues(buf);
+        for (let i = 0; i < n; i++) out += alphabet[buf[i] % alphabet.length];
+      } else {
+        for (let i = 0; i < n; i++) out += alphabet[Math.floor(Math.random() * alphabet.length)];
+      }
+      return out;
+    }
+    function freshFilename() {
+      return `fitts_per_click_${randId(6)}.csv`;
+    }
+    }) ();
+  </script>
+</body>
+
+</html>

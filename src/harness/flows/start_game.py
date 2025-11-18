@@ -1,14 +1,11 @@
 import tkinter as tk
 from tkinter import font
 
-from harness import video
-
 
 def popup_start_banner(
     window_title: str,
     title: str,
     description: str,
-    tutorial_path: str | None = None,
 ) -> None:
     """Display a banner announcing the start of the Fitts' Law game."""
     master = tk.Tk()
@@ -41,21 +38,8 @@ def popup_start_banner(
         justify="center",
     ).pack(pady=(0, 40))
 
-    if tutorial_path is not None:
-        video_frame = tk.LabelFrame(master, bg="black", width=1280, height=720)
-        video_frame.pack(pady=(10, 20))
-        video_frame.pack_propagate(False)  # keep fixed size
-
-        player = video.Player(video_frame)
-        player.open_file(tutorial_path)
-
-        def on_quit() -> None:
-            master.destroy()
-            player.mediaplayer.stop()
-    else:
-
-        def on_quit() -> None:
-            master.destroy()
+    def on_quit() -> None:
+        master.destroy()
 
     # Start button
     start_button = tk.Button(
