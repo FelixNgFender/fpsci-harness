@@ -9,6 +9,7 @@ STEAM_PROCESS = "steam.exe"
 STEAM_ABSOLUTE_PATH = r"C:\Program Files (x86)\Steam\steam.exe"
 EPIC_GAMES_PROCESS = "EpicGamesLauncher.exe"
 EPIC_GAMES_ABSOLUTE_PATH = r"C:\Program Files (x86)\Epic Games\Launcher\Portal\Binaries\Win32\EpicGamesLauncher.exe"
+RRROCKET = "rrrocket.exe"
 
 # Experiment result artifact names
 ROUND_END_SCREENSHOT = "round_end.png"
@@ -37,10 +38,10 @@ FEEDING_FRENZY_SCORE_IMG = "score.png"
 FEEDING_FRENZY_SCORE = "score.txt"
 
 ROCKET_LEAGUE_STEAM_APP_ID = "steam://rungameid/15938706871955750912"
-ROCKET_LEAGUE_DEMO_DIR = r"C:\Users\shengmei\Documents\My Games\Rocket League\TAGame\DemosEpic"
+ROCKET_LEAGUE_DEMO_DIR = pathlib.Path.home() / "Documents" / "My Games" / "Rocket League" / "TAGame" / "DemosEpic"
 ROCKET_LEAGUE_PROCESS = "RocketLeague.exe"
 ROCKET_LEAGUE_FLAGS = ["-nomovie"]
-ROCKET_LEAGUE_STARTUP_TIME_S = 18
+ROCKET_LEAGUE_WINDOW = "Rocket League (64-bit, DX11, Cooked)"
 
 DAVE_THE_DIVER_STARTUP_TIMEOUT = 50
 DAVE_THE_DIVER_STEAM_APP_ID = "1868140"

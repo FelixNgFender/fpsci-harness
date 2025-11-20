@@ -10,6 +10,9 @@ P0: Take out "Please go back to game for another round"
 P0: Add a progress bar or progression per round (such as round 5/7)
 
 
+P0: e2e testing A LOT
+
+
 P1: Talk to Nvidia about working document for continuous feedback
 
 

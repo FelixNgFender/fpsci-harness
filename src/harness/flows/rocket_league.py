@@ -1,5 +1,6 @@
 import logging
 import pathlib
+import shutil
 import subprocess
 import time
 
@@ -27,10 +28,9 @@ def start(game_settings: settings.GameContext) -> None:
     pathlib.Path(test_round_dir).mkdir(parents=True, exist_ok=True)
 
     # preload and re-use game for all rounds
-    subprocess.Popen([constants.STEAM_ABSOLUTE_PATH, constants.ROCKET_LEAGUE_STEAM_APP_ID, "-nomovie"])  # noqa: S603
-    time.sleep(constants.ROCKET_LEAGUE_STARTUP_TIME_S)
-    pyautogui.press("enter")  # enter menu
-    time.sleep(0.5)
+    subprocess.Popen(  # noqa: S603
+        [constants.STEAM_ABSOLUTE_PATH, constants.ROCKET_LEAGUE_STEAM_APP_ID, *constants.ROCKET_LEAGUE_FLAGS]
+    )
 
     play_round(
         test_round_dir,
@@ -52,8 +52,8 @@ def start(game_settings: settings.GameContext) -> None:
         logger.info("qoe questionnaire taken")
 
     process.kill_process_name(constants.ROCKET_LEAGUE_PROCESS)
-    # TODO: at the end: batch convert replay file to json using rrrocket.exe
-    # .\rrrocket.exe -m .\experiment\2025-11-10_21-17-30\rocket_league\
+    # at the end: batch convert replay files to json siblings using rrrocket.exe
+    subprocess.run([constants.RRROCKET, "-m", str(game_settings.game_dir)], check=True)  # noqa: S603
     logger.info("data archived")
 
 
@@ -64,33 +64,23 @@ def play_round(
     latency_ms: int | None = None,
     is_test: bool = False,
 ) -> None:
-    # assume to be in menu right now - go into custom match - pause game
-    pyautogui.press("right")
-    pyautogui.press("enter")  # enter play
-    time.sleep(0.5)
-    pyautogui.press("right")
-    pyautogui.press("enter")  # enter private match
-    time.sleep(0.5)
-    pyautogui.press("up")
-    pyautogui.press("up")
-    pyautogui.press("enter")  # enter create private match
-    time.sleep(0.5)
-    pyautogui.press("up")
-    pyautogui.press("down")
-    pyautogui.press("enter")  # enter create match
-    pyautogui.press("down")
-    pyautogui.press("down")
-    pyautogui.press("enter")  # enter create match with password
-    time.sleep(3)  # entering match
-    pyautogui.press("down")
-    pyautogui.press("enter")  # enter join orange
-    time.sleep(5)
-    pyautogui.press("esc")
-    pyautogui.press("down")
-    pyautogui.press("enter")  # enter pause game
-
     if is_test:
         test_round.popup_test_round_start_banner()
+
+    process.focus_window(constants.ROCKET_LEAGUE_WINDOW)
+
+    while not is_in_menu():
+        pyautogui.press("space", interval=0.5)
+        continue
+
+    # assume to be in menu right now - go into custom match - pause game
+    pyautogui.click(172, 441, interval=0.2)  # enter play
+    pyautogui.click(1400, 612, interval=0.2)  # enter private match
+    pyautogui.click(741, 345, interval=0.2)  # enter create private match
+    pyautogui.click(540, 797, interval=0.2)  # enter create match
+    pyautogui.click(856, 650, interval=3)  # enter create match with password
+    pyautogui.click(350, 375, interval=3)  # enter join orange
+    time.sleep(3)  # match start time
 
     logger.info("starting test round" if is_test else "starting round")
     with monitoring.latency_context(results_dir, latency_ms):
@@ -98,18 +88,32 @@ def play_round(
         time.sleep(duration_s)
         # collect stats
         with pyautogui.hold("tab"):
+            time.sleep(0.2 + (latency_ms / 1000 if latency_ms else 0.0))
             pyautogui.screenshot(results_dir / constants.ROUND_END_SCREENSHOT)
+            time.sleep(0.2)  # some tolerance
 
     logger.info("test round ended" if is_test else "round ended")
-    # TODO: move replay from constants.ROCKET_LEAGUE_DEMO_DIR to results_dir
     logger.info("collected round result")
 
-    # pause and quit match to main menu
+    # exit match, save replay and return to main menu
     pyautogui.press("esc")  # pop up options
-    pyautogui.press("up")
-    pyautogui.press("enter")  # enter leave match
-    pyautogui.press("left")
-    pyautogui.press("enter")  # confirm leave match
-
+    pyautogui.click(950, 685, interval=0.2)  # enter leave match
+    pyautogui.click(858, 617, interval=2)  # confirm leave match
+    pyautogui.click(207, 695, interval=0.2)  # profile
+    pyautogui.click(207, 645, interval=0.2)  # match history
+    pyautogui.click(508, 394, interval=0.2)  # latest match
+    pyautogui.click(352, 1023, interval=0.2)  # save replay
+    pyautogui.typewrite(results_dir.name)  # replay name
+    pyautogui.press("enter", interval=1)  # ok wait for replay to save
+    pyautogui.press("esc", presses=10)  # back to menu
+    # move replay from demo dir to results dir
+    for replay in constants.ROCKET_LEAGUE_DEMO_DIR.glob("*.replay"):
+        shutil.move(str(replay), str(results_dir / replay.name))
     if is_test:
         test_round.popup_test_round_end_banner()
+
+
+def is_in_menu() -> bool:
+    return pyautogui.pixelMatchesColor(116, 966, (32, 65, 86), tolerance=10) and pyautogui.pixelMatchesColor(
+        583, 69, (134, 50, 45), tolerance=10
+    )
