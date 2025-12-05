@@ -50,3 +50,11 @@ DAVE_THE_DIVER_PROCESS = "DaveTheDiver.exe"
 DAVE_THE_DIVER_WINDOW = "DAVE THE DIVER"
 DAVE_THE_DIVER_SCORE_IMG = "score.png"
 DAVE_THE_DIVER_SCORE = "score.txt"
+
+HALF_LIFE_2_STEAM_APP_ID = "220"
+HALF_LIFE_2_FLAGS = ["-console", "-novid"]
+HALF_LIFE_2_PROCESS = "hl2.exe"
+HALF_LIFE_2_WINDOW = "HALF-LIFE 2 - Direct3D 9"
+HALF_LIFE_2_DUMP_PATH = r"C:\Program Files (x86)\Steam\steamapps\common\Half-Life 2\workshop\condump000.txt"
+HALF_LIFE_2_DUMP = "dump.txt"
+HALF_LIFE_2_SCORE = "score.txt"

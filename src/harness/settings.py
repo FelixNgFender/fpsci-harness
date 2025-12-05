@@ -15,6 +15,7 @@ class Game(enum.StrEnum):
     FEEDIND_FRENZY = "feeding_frenzy"
     ROCKET_LEAGUE = "rocket_league"
     DAVE_THE_DIVER = "dave_the_diver"
+    HALF_LIFE_2 = "half_life_2"
 
 
 class MonitoringChoice(enum.StrEnum):

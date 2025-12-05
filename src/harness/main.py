@@ -9,7 +9,7 @@ import rich.logging
 import rich.prompt
 
 from harness import constants, process, settings, utils
-from harness.flows import dave_the_diver, feeding_frenzy, fitts, rocket_league, thanks
+from harness.flows import dave_the_diver, feeding_frenzy, fitts, half_life_2, rocket_league, thanks
 from harness.monitoring import keyboard, mouse
 
 if TYPE_CHECKING:
@@ -52,6 +52,8 @@ def start(start_settings: settings.StartSettings) -> None:
                 rocket_league.start(ctx)
             case settings.Game.DAVE_THE_DIVER:
                 dave_the_diver.start(ctx)
+            case settings.Game.HALF_LIFE_2:
+                half_life_2.start(ctx)
     thanks.popup_thank_you_banner()
 
 
