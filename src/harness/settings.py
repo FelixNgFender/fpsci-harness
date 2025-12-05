@@ -39,13 +39,17 @@ class CleanSettings(pydantic_settings.BaseSettings):
     model_config = pydantic_settings.SettingsConfigDict(env_file=".env", extra="ignore")
 
 
-class MonitorSettings(pydantic_settings.BaseSettings):
-    """Settings for the `monitor` CLI subcommand."""
-
+class LogSettings(pydantic_settings.BaseSettings):
     verbose: Annotated[
         pydantic_settings.CliImplicitFlag[bool],
         pydantic.Field(description="Logs extra debugging information"),
     ] = False
+    model_config = pydantic_settings.SettingsConfigDict(env_file=".env", extra="ignore")
+
+
+class MonitorSettings(LogSettings):
+    """Settings for the `monitor` CLI subcommand."""
+
     monitor_choice: Annotated[
         MonitoringChoice,
         pydantic.Field(description="Which devices to monitor input for"),
@@ -62,29 +66,28 @@ class MonitorSettings(pydantic_settings.BaseSettings):
     model_config = pydantic_settings.SettingsConfigDict(env_file=".env", extra="ignore")
 
 
-class StartSettings(MonitorSettings):
-    """Settings for latency experiment CLI."""
+class ScheduleSettings(LogSettings):
+    """Settings for the `schedule` CLI subcommand."""
 
     games: Annotated[
         list[Game],
         pydantic.Field(description="Games to test"),
     ] = list(Game)
+    latencies: Annotated[
+        list[int],
+        pydantic.Field(description="Local latency levels to test (ms)"),
+    ] = [25, 50, 100]
+
+    model_config = pydantic_settings.SettingsConfigDict(env_file=".env", extra="ignore")
+
+
+class StartSettings(MonitorSettings, ScheduleSettings):
+    """Settings for the `start` CLI subcommand."""
+
     game_duration: Annotated[
         int,
         pydantic.Field(description="Duration of each game round (s)"),
     ] = 60
-    randomize_games: Annotated[
-        pydantic_settings.CliImplicitFlag[bool],
-        pydantic.Field(description="Whether to randomize game selection"),
-    ] = True
-    latencies: Annotated[
-        list[int],
-        pydantic.Field(description="Local latency levels to test (ms)"),
-    ] = [0, 100, 500]
-    randomize_latencies: Annotated[
-        pydantic_settings.CliImplicitFlag[bool],
-        pydantic.Field(description="Whether to randomize latencies"),
-    ] = True
 
     model_config = pydantic_settings.SettingsConfigDict(env_file=".env", extra="ignore")
 

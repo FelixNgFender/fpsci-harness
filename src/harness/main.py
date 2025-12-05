@@ -1,6 +1,5 @@
 import logging
 import pathlib
-import random
 import shutil
 from typing import TYPE_CHECKING
 
@@ -8,7 +7,7 @@ import pydantic_settings
 import rich.logging
 import rich.prompt
 
-from harness import constants, process, settings, utils
+from harness import constants, process, schedule, settings, utils
 from harness.flows import dave_the_diver, feeding_frenzy, fitts, half_life_2, rocket_league, thanks
 from harness.monitoring import keyboard, mouse
 
@@ -18,7 +17,7 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-def configure_logging(log_settings: settings.MonitorSettings) -> None:
+def configure_logging(log_settings: settings.LogSettings) -> None:
     logging.basicConfig(
         level=logging.DEBUG if log_settings.verbose else logging.INFO,
         format="%(message)s",
@@ -31,11 +30,6 @@ def start(start_settings: settings.StartSettings) -> None:
     """Randomize list of games in an experiment and match each with their respetive flow."""
     process.start_epic_games_or_stop_if_not_exists()
     process.start_steam_or_stop_if_not_exists()
-
-    if start_settings.randomize_games:
-        random.shuffle(start_settings.games)
-    if start_settings.randomize_latencies:
-        random.shuffle(start_settings.latencies)
 
     logger.debug("testing game list %s", start_settings.games)
     experiment_run_dir = start_settings.experiment_dir / utils.current_datetime_str()
@@ -63,6 +57,14 @@ class Start(settings.StartSettings):
     def cli_cmd(self) -> None:
         configure_logging(self)
         start(self)
+
+
+class Schedule(settings.ScheduleSettings):
+    """Schedule mass experiment configurations using latin squares."""
+
+    def cli_cmd(self) -> None:
+        configure_logging(self)
+        schedule.generate(self)
 
 
 def monitor(monitor_settings: settings.MonitorSettings) -> None:
@@ -108,7 +110,10 @@ class Command(
     cli_use_class_docs_for_groups=True,
     cli_kebab_case=True,
 ):
+    """Harness for conducting experiments for WPI FPSci IQP 2025"""
+
     start: pydantic_settings.CliSubCommand[Start]
+    schedule: pydantic_settings.CliSubCommand[Schedule]
     monitor: pydantic_settings.CliSubCommand[Monitor]
     clean: pydantic_settings.CliSubCommand[Clean]
 
