@@ -1,6 +1,6 @@
 import csv
 import logging
-import pathlib
+import sys
 
 from harness import settings
 
@@ -40,39 +40,38 @@ def generate(schedule_settings: settings.ScheduleSettings) -> None:
             )
 
     # Export to CSV
-    csv_path = "latin_schedules.csv"
+    out = sys.stdout if schedule_settings.out is None else schedule_settings.out.open("w", newline="", encoding="utf-8")
+    writer = csv.writer(out)
+    # CSV header
+    writer.writerow(
+        [
+            "participant",
+            "game_position",
+            "game_name",
+            "round_1",
+            "round_2",
+            "round_3",
+            "round_4",
+        ]
+    )
 
-    with pathlib.Path(csv_path).open("w", newline="", encoding="utf-8") as f:
-        writer = csv.writer(f)
+    # One row per (participant, game)
+    for s in schedules:
+        p = s["participant"]
+        for pos, game in enumerate(s["game_order"], start=1):
+            rounds = s["per_game_rounds"][game]
+            writer.writerow(
+                [
+                    p,
+                    pos,
+                    game,
+                    rounds[0],  # trial
+                    rounds[1],  # latency A
+                    rounds[2],  # latency B
+                    rounds[3],  # latency C
+                ]
+            )
+    if out is not sys.stdout:
+        out.close()
 
-        # CSV header
-        writer.writerow(
-            [
-                "participant",
-                "game_position",
-                "game_name",
-                "round_1",
-                "round_2",
-                "round_3",
-                "round_4",
-            ]
-        )
-
-        # One row per (participant, game)
-        for s in schedules:
-            p = s["participant"]
-            for pos, game in enumerate(s["game_order"], start=1):
-                rounds = s["per_game_rounds"][game]
-                writer.writerow(
-                    [
-                        p,
-                        pos,
-                        game,
-                        rounds[0],  # trial
-                        rounds[1],  # latency A
-                        rounds[2],  # latency B
-                        rounds[3],  # latency C
-                    ]
-                )
-
-    logger.info("exported balanced Latin-square schedules to %s", csv_path)
+    logger.info("exported balanced Latin-square schedules to %s", out)

@@ -57,7 +57,7 @@ class MonitorSettings(LogSettings):
     monitor_duration: Annotated[
         int,
         pydantic.Field(description="Duration to monitor input devices (s)"),
-    ] = 60
+    ] = constants.DEFAULT_DURATION
     experiment_dir: Annotated[
         pathlib.Path,
         pydantic.Field(description="Location to store experiment results"),
@@ -66,8 +66,8 @@ class MonitorSettings(LogSettings):
     model_config = pydantic_settings.SettingsConfigDict(env_file=".env", extra="ignore")
 
 
-class ScheduleSettings(LogSettings):
-    """Settings for the `schedule` CLI subcommand."""
+class ExperimentSettings(LogSettings):
+    """Core experiment variables"""
 
     games: Annotated[
         list[Game],
@@ -76,18 +76,29 @@ class ScheduleSettings(LogSettings):
     latencies: Annotated[
         list[int],
         pydantic.Field(description="Local latency levels to test (ms)"),
-    ] = [25, 50, 100]
+    ] = constants.DEFAULT_LATENCIES
 
     model_config = pydantic_settings.SettingsConfigDict(env_file=".env", extra="ignore")
 
 
-class StartSettings(MonitorSettings, ScheduleSettings):
+class ScheduleSettings(ExperimentSettings):
+    """Settings for the `schedule` CLI subcommand."""
+
+    out: Annotated[
+        pathlib.Path | None,
+        pydantic.Field(description="Location to store the generated schedule. `stdout` if not specified."),
+    ] = None
+
+    model_config = pydantic_settings.SettingsConfigDict(env_file=".env", extra="ignore")
+
+
+class StartSettings(ExperimentSettings, MonitorSettings):
     """Settings for the `start` CLI subcommand."""
 
     game_duration: Annotated[
         int,
         pydantic.Field(description="Duration of each game round (s)"),
-    ] = 60
+    ] = constants.DEFAULT_DURATION
 
     model_config = pydantic_settings.SettingsConfigDict(env_file=".env", extra="ignore")
 
