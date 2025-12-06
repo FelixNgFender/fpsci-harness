@@ -7,7 +7,8 @@ import pydantic_settings
 import rich.logging
 import rich.prompt
 
-from harness import constants, process, schedule, settings, utils
+from harness import constants, process, settings, utils
+from harness import schedule as schedule_mod
 from harness.flows import dave_the_diver, feeding_frenzy, fitts, half_life_2, rocket_league, thanks
 from harness.monitoring import keyboard, mouse
 
@@ -27,7 +28,7 @@ def configure_logging(log_settings: settings.LogSettings) -> None:
 
 
 def start(start_settings: settings.StartSettings) -> None:
-    """Randomize list of games in an experiment and match each with their respetive flow."""
+    """Match each game with their respetive flow."""
     process.start_epic_games_or_stop_if_not_exists()
     process.start_steam_or_stop_if_not_exists()
 
@@ -40,7 +41,7 @@ def start(start_settings: settings.StartSettings) -> None:
         match g:
             case settings.Game.FITTS:
                 fitts.start(ctx)
-            case settings.Game.FEEDIND_FRENZY:
+            case settings.Game.FEEDING_FRENZY:
                 feeding_frenzy.start(ctx)
             case settings.Game.ROCKET_LEAGUE:
                 rocket_league.start(ctx)
@@ -59,12 +60,83 @@ class Start(settings.StartSettings):
         start(self)
 
 
+def conduct(conduct_settings: settings.ConductSettings) -> None:
+    schedule_obj = (
+        schedule_mod.generate(conduct_settings)
+        if conduct_settings.input is None
+        else schedule_mod.Schedule.load_csv(conduct_settings.input)
+    )
+    participant_schedule = schedule_obj.participants[conduct_settings.participant - 1]
+    if conduct_settings.starting_game is not None:
+        participant_schedule.games = participant_schedule.games[
+            participant_schedule.games.index(conduct_settings.starting_game) :
+        ]
+    logger.info("conduting participant schedule %s", participant_schedule)
+
+    process.start_epic_games_or_stop_if_not_exists()
+    process.start_steam_or_stop_if_not_exists()
+    current_dt = utils.current_datetime_str()
+    experiment_run_dir = conduct_settings.experiment_dir / current_dt
+    for g in participant_schedule.games:
+        game_dir = experiment_run_dir / g
+        raw = conduct_settings.model_dump()
+
+        # remove conflicting keys
+        raw.pop("games", None)
+        raw.pop("latencies", None)
+        ctx = settings.GameContext(
+            **raw,
+            games=participant_schedule.games,
+            latencies=participant_schedule.latencies,
+            game_dir=game_dir,
+            game=g,
+        )
+        pathlib.Path(ctx.game_dir).mkdir(parents=True, exist_ok=True)
+        match g:
+            case settings.Game.FITTS:
+                fitts.start(ctx)
+            case settings.Game.FEEDING_FRENZY:
+                feeding_frenzy.start(ctx)
+            case settings.Game.ROCKET_LEAGUE:
+                rocket_league.start(ctx)
+            case settings.Game.DAVE_THE_DIVER:
+                dave_the_diver.start(ctx)
+            case settings.Game.HALF_LIFE_2:
+                half_life_2.start(ctx)
+    thanks.popup_thank_you_banner()
+
+    # back up qoe data
+    backup_dir = constants.BACKUP_DIR / str(participant_schedule.participant) / current_dt
+    shutil.copytree(src=experiment_run_dir, dst=backup_dir)
+
+
+class Conduct(settings.ConductSettings):
+    """
+    Conduct the experiment for a participant from a schedule. If `input` is not specified, generate a schedule.
+    """
+
+    def cli_cmd(self) -> None:
+        configure_logging(self)
+        conduct(self)
+
+
+def schedule(schedule_settings: settings.ScheduleSettings) -> None:
+    schedule_obj = schedule_mod.generate(schedule_settings)
+    if schedule_settings.out is None:
+        logger.info("generated schedule %s", schedule_obj)
+        return
+
+    with schedule_settings.out.open("w", newline="", encoding="utf-8") as f:
+        schedule_obj.to_csv(f)
+    logger.info("exported schedule to %s", schedule_settings.out)
+
+
 class Schedule(settings.ScheduleSettings):
     """Schedule mass experiment configurations using latin squares."""
 
     def cli_cmd(self) -> None:
         configure_logging(self)
-        schedule.generate(self)
+        schedule(self)
 
 
 def monitor(monitor_settings: settings.MonitorSettings) -> None:
@@ -113,6 +185,7 @@ class Command(
     """Harness for conducting experiments for WPI FPSci IQP 2025"""
 
     start: pydantic_settings.CliSubCommand[Start]
+    conduct: pydantic_settings.CliSubCommand[Conduct]
     schedule: pydantic_settings.CliSubCommand[Schedule]
     monitor: pydantic_settings.CliSubCommand[Monitor]
     clean: pydantic_settings.CliSubCommand[Clean]

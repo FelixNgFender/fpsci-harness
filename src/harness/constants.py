@@ -5,6 +5,7 @@ DEFAULT_EXPERIMENT_PATH = pathlib.Path("experiment")
 DEFAULT_LATENCIES = [25, 50, 100]
 DEFAULT_DURATION = 60
 ASSETS_DIR = pathlib.Path("assets")
+BACKUP_DIR = pathlib.Path.home() / "Documents" / "fpsci-2025-backup"
 """Contains tutorial videos and banner images"""
 DATEFMT_STR = "%Y-%m-%d_%H-%M-%S"
 STEAM_PROCESS = "steam.exe"

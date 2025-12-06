@@ -1,6 +1,8 @@
-P0: discuss if there should be a hard time limit for fitts or we just let them finish
+P0: rocket league and dave the diver seems to be broken
 
-P0: Get workflow done for rocket league (Kyle)
+P0: dave the diver very laggy when start
+
+P0: discuss if there should be a hard time limit for fitts or we just let them finish
 
 P0: Take out the 'this is a tutorial screen' in fitts law
 

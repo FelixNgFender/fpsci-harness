@@ -12,7 +12,7 @@ class Game(enum.StrEnum):
     """Add more games here."""
 
     FITTS = "fitts_law"
-    FEEDIND_FRENZY = "feeding_frenzy"
+    FEEDING_FRENZY = "feeding_frenzy"
     ROCKET_LEAGUE = "rocket_league"
     DAVE_THE_DIVER = "dave_the_diver"
     HALF_LIFE_2 = "half_life_2"
@@ -81,17 +81,6 @@ class ExperimentSettings(LogSettings):
     model_config = pydantic_settings.SettingsConfigDict(env_file=".env", extra="ignore")
 
 
-class ScheduleSettings(ExperimentSettings):
-    """Settings for the `schedule` CLI subcommand."""
-
-    out: Annotated[
-        pathlib.Path | None,
-        pydantic.Field(description="Location to store the generated schedule. `stdout` if not specified."),
-    ] = None
-
-    model_config = pydantic_settings.SettingsConfigDict(env_file=".env", extra="ignore")
-
-
 class StartSettings(ExperimentSettings, MonitorSettings):
     """Settings for the `start` CLI subcommand."""
 
@@ -99,6 +88,36 @@ class StartSettings(ExperimentSettings, MonitorSettings):
         int,
         pydantic.Field(description="Duration of each game round (s)"),
     ] = constants.DEFAULT_DURATION
+
+    model_config = pydantic_settings.SettingsConfigDict(env_file=".env", extra="ignore")
+
+
+class ConductSettings(StartSettings):
+    """Settings for the `conduct` CLI subcommand."""
+
+    input: Annotated[
+        pathlib.Path | None,
+        pydantic.Field(description="Location of the input schedule. `stdin` if not specified."),
+    ] = None
+    participant: Annotated[int, pydantic.Field(description="Participant ID in the schedule")]
+    starting_game: Annotated[
+        Game | None,
+        pydantic.Field(
+            description="Game at which this experiment should start at. Useful when restarting. "
+            "Start at the beginning if null."
+        ),
+    ] = None
+
+    model_config = pydantic_settings.SettingsConfigDict(env_file=".env", extra="ignore")
+
+
+class ScheduleSettings(ExperimentSettings):
+    """Settings for the `schedule` CLI subcommand."""
+
+    out: Annotated[
+        pathlib.Path | None,
+        pydantic.Field(description="Location to store the generated schedule. `stdout` if not specified."),
+    ] = None
 
     model_config = pydantic_settings.SettingsConfigDict(env_file=".env", extra="ignore")
 
