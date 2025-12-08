@@ -25,7 +25,7 @@ def start(game_settings: settings.GameContext) -> None:
         title="Dave the Diver",
         description="TODO",
     )
-    test_round_dir = game_settings.game_dir / f"{utils.current_datetime_str()}_test"
+    test_round_dir = game_settings.game_dir / f"{utils.get_current_datetime()}_test"
     pathlib.Path(test_round_dir).mkdir(parents=True, exist_ok=True)
 
     # preload and re-use game for all rounds
@@ -48,7 +48,7 @@ def start(game_settings: settings.GameContext) -> None:
     logger.info("qoe questionnaire taken")
     for latency_ms in game_settings.game_with_latencies.latencies:
         next_round.popup_next_round_banner()
-        round_dir = game_settings.game_dir / f"{utils.current_datetime_str()}_{latency_ms}ms"
+        round_dir = game_settings.game_dir / f"{utils.get_current_datetime()}_{latency_ms}ms"
         pathlib.Path(round_dir).mkdir(parents=True, exist_ok=True)
         play_round(
             round_dir,

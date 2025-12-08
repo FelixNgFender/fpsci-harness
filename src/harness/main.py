@@ -33,7 +33,7 @@ def start(start_settings: settings.StartSettings) -> None:
     process.start_steam_or_stop_if_not_exists()
 
     logger.debug("testing game list %s", start_settings.games_with_latencies)
-    experiment_run_dir = start_settings.experiment_dir / utils.current_datetime_str()
+    experiment_run_dir = start_settings.experiment_dir / utils.get_current_datetime()
     for g in start_settings.games_with_latencies:
         game_dir = experiment_run_dir / g.game
         ctx = settings.GameContext(**start_settings.model_dump(), game_dir=game_dir, game_with_latencies=g)
@@ -77,7 +77,7 @@ def conduct(conduct_settings: settings.ConductSettings) -> None:
 
     process.start_epic_games_or_stop_if_not_exists()
     process.start_steam_or_stop_if_not_exists()
-    current_dt = utils.current_datetime_str()
+    current_dt = utils.get_current_datetime()
     experiment_run_dir = conduct_settings.experiment_dir / current_dt
     for g in participant_schedule.games_with_latencies:
         game_dir = experiment_run_dir / g.game
@@ -140,7 +140,7 @@ class Schedule(settings.ScheduleSettings):
 
 
 def monitor(monitor_settings: settings.MonitorSettings) -> None:
-    monitoring_run_dir = monitor_settings.experiment_dir / utils.current_datetime_str()
+    monitoring_run_dir = monitor_settings.experiment_dir / utils.get_current_datetime()
     pathlib.Path(monitoring_run_dir).mkdir(parents=True, exist_ok=True)
     listeners: list[pynput.keyboard.Listener | pynput.mouse.Listener] = []
     match monitor_settings.monitor_choice:
