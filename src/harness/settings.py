@@ -1,27 +1,10 @@
-import enum
 import pathlib
 from typing import Annotated
 
 import pydantic
 import pydantic_settings
 
-from harness import constants
-
-
-class Game(enum.StrEnum):
-    """Add more games here."""
-
-    FITTS = "fitts_law"
-    FEEDING_FRENZY = "feeding_frenzy"
-    ROCKET_LEAGUE = "rocket_league"
-    DAVE_THE_DIVER = "dave_the_diver"
-    HALF_LIFE_2 = "half_life_2"
-
-
-class MonitoringChoice(enum.StrEnum):
-    ALL = "all"
-    KEYBOARD = "keyboard"
-    MOUSE = "mouse"
+from harness import constants, types
 
 
 class CleanSettings(pydantic_settings.BaseSettings):
@@ -44,20 +27,6 @@ class LogSettings(pydantic_settings.BaseSettings):
         pydantic_settings.CliImplicitFlag[bool],
         pydantic.Field(description="Logs extra debugging information"),
     ] = False
-    model_config = pydantic_settings.SettingsConfigDict(env_file=".env", extra="ignore")
-
-
-class MonitorSettings(LogSettings):
-    """Settings for the `monitor` CLI subcommand."""
-
-    monitor_choice: Annotated[
-        MonitoringChoice,
-        pydantic.Field(description="Which devices to monitor input for"),
-    ] = MonitoringChoice.ALL
-    monitor_duration: Annotated[
-        int,
-        pydantic.Field(description="Duration to monitor input devices (s)"),
-    ] = constants.DEFAULT_DURATION
     experiment_dir: Annotated[
         pathlib.Path,
         pydantic.Field(description="Location to store experiment results"),
@@ -66,17 +35,28 @@ class MonitorSettings(LogSettings):
     model_config = pydantic_settings.SettingsConfigDict(env_file=".env", extra="ignore")
 
 
+class MonitorSettings(LogSettings):
+    """Settings for the `monitor` CLI subcommand."""
+
+    monitor_choice: Annotated[
+        types.MonitoringChoice,
+        pydantic.Field(description="Which devices to monitor input for"),
+    ] = types.MonitoringChoice.ALL
+    monitor_duration: Annotated[
+        int,
+        pydantic.Field(description="Duration to monitor input devices (s)"),
+    ] = constants.DEFAULT_DURATION
+
+    model_config = pydantic_settings.SettingsConfigDict(env_file=".env", extra="ignore")
+
+
 class ExperimentSettings(LogSettings):
     """Core experiment variables"""
 
-    games: Annotated[
-        list[Game],
-        pydantic.Field(description="Games to test"),
-    ] = list(Game)
-    latencies: Annotated[
-        list[int],
-        pydantic.Field(description="Local latency levels to test (ms)"),
-    ] = constants.DEFAULT_LATENCIES
+    games_with_latencies: Annotated[
+        list[types.GameWithLatencies],
+        pydantic.Field(description="Games with their respective latencies to test"),
+    ] = constants.DEFAULT_GAMES_WITH_LATENCIES
 
     model_config = pydantic_settings.SettingsConfigDict(env_file=".env", extra="ignore")
 
@@ -97,11 +77,14 @@ class ConductSettings(StartSettings):
 
     input: Annotated[
         pathlib.Path | None,
-        pydantic.Field(description="Location of the input schedule. `stdin` if not specified."),
+        pydantic.Field(
+            description="Location of the input schedule. Use `harness schedule` to generate an in-memory "
+            "schedule if this is not specified."
+        ),
     ] = None
     participant: Annotated[int, pydantic.Field(description="Participant ID in the schedule")]
     starting_game: Annotated[
-        Game | None,
+        types.Game | None,
         pydantic.Field(
             description="Game at which this experiment should start at. Useful when restarting. "
             "Start at the beginning if null."
@@ -114,7 +97,7 @@ class ConductSettings(StartSettings):
 class ScheduleSettings(ExperimentSettings):
     """Settings for the `schedule` CLI subcommand."""
 
-    out: Annotated[
+    output: Annotated[
         pathlib.Path | None,
         pydantic.Field(description="Location to store the generated schedule. `stdout` if not specified."),
     ] = None
@@ -131,4 +114,6 @@ class GameContext(StartSettings):
             description="Directory to save experiment results for this game",
         ),
     ]
-    game: Annotated[Game, pydantic.Field(description="The game being ran")]
+    game_with_latencies: Annotated[
+        types.GameWithLatencies, pydantic.Field(description="The game being ran with its configured latencies")
+    ]

@@ -19,9 +19,9 @@ logger = logging.getLogger(__name__)
 def start(game_settings: settings.GameContext) -> None:
     harness_logging.configure_log_to_file(
         logger,
-        game_settings.game_dir / f"{game_settings.game}.stdout.csv",
+        game_settings.game_dir / f"{game_settings.game_with_latencies.game}.stdout.csv",
     )
-    logger.debug("starting %s flow", str(game_settings.game))
+    logger.debug("starting %s flow", str(game_settings.game_with_latencies.game))
     start_game.popup_start_banner(
         window_title="Half-Life 2",
         title="Half-Life 2",
@@ -48,7 +48,7 @@ def start(game_settings: settings.GameContext) -> None:
     )
     qoe.popup_qoe_questionnaire(test_round_dir / constants.QOE_ANSWERS)
     logger.info("qoe questionnaire taken")
-    for latency_ms in game_settings.latencies:
+    for latency_ms in game_settings.game_with_latencies.latencies:
         next_round.popup_next_round_banner()
         round_dir = game_settings.game_dir / f"{utils.current_datetime_str()}_{latency_ms}ms"
         pathlib.Path(round_dir).mkdir(parents=True, exist_ok=True)

@@ -7,7 +7,7 @@ import pydantic_settings
 import rich.logging
 import rich.prompt
 
-from harness import constants, process, settings, utils
+from harness import constants, process, settings, types, utils
 from harness import schedule as schedule_mod
 from harness.flows import dave_the_diver, feeding_frenzy, fitts, half_life_2, rocket_league, thanks
 from harness.monitoring import keyboard, mouse
@@ -32,22 +32,22 @@ def start(start_settings: settings.StartSettings) -> None:
     process.start_epic_games_or_stop_if_not_exists()
     process.start_steam_or_stop_if_not_exists()
 
-    logger.debug("testing game list %s", start_settings.games)
+    logger.debug("testing game list %s", start_settings.games_with_latencies)
     experiment_run_dir = start_settings.experiment_dir / utils.current_datetime_str()
-    for g in start_settings.games:
-        game_dir = experiment_run_dir / g
-        ctx = settings.GameContext(**start_settings.model_dump(), game_dir=game_dir, game=g)
+    for g in start_settings.games_with_latencies:
+        game_dir = experiment_run_dir / g.game
+        ctx = settings.GameContext(**start_settings.model_dump(), game_dir=game_dir, game_with_latencies=g)
         pathlib.Path(ctx.game_dir).mkdir(parents=True, exist_ok=True)
-        match g:
-            case settings.Game.FITTS:
+        match g.game:
+            case types.Game.FITTS:
                 fitts.start(ctx)
-            case settings.Game.FEEDING_FRENZY:
+            case types.Game.FEEDING_FRENZY:
                 feeding_frenzy.start(ctx)
-            case settings.Game.ROCKET_LEAGUE:
+            case types.Game.ROCKET_LEAGUE:
                 rocket_league.start(ctx)
-            case settings.Game.DAVE_THE_DIVER:
+            case types.Game.DAVE_THE_DIVER:
                 dave_the_diver.start(ctx)
-            case settings.Game.HALF_LIFE_2:
+            case types.Game.HALF_LIFE_2:
                 half_life_2.start(ctx)
     thanks.popup_thank_you_banner()
 
@@ -62,14 +62,16 @@ class Start(settings.StartSettings):
 
 def conduct(conduct_settings: settings.ConductSettings) -> None:
     schedule_obj = (
-        schedule_mod.generate(conduct_settings)
+        schedule_mod.generate(conduct_settings.games_with_latencies)
         if conduct_settings.input is None
-        else schedule_mod.Schedule.load_csv(conduct_settings.input)
+        else schedule_mod.Schedule.load_json(conduct_settings.input)
     )
     participant_schedule = schedule_obj.participants[conduct_settings.participant - 1]
+    # start from starting game if specified
     if conduct_settings.starting_game is not None:
-        participant_schedule.games = participant_schedule.games[
-            participant_schedule.games.index(conduct_settings.starting_game) :
+        games = [g.game for g in participant_schedule.games_with_latencies]
+        participant_schedule.games_with_latencies = participant_schedule.games_with_latencies[
+            games.index(conduct_settings.starting_game) :
         ]
     logger.info("conduting participant schedule %s", participant_schedule)
 
@@ -77,31 +79,29 @@ def conduct(conduct_settings: settings.ConductSettings) -> None:
     process.start_steam_or_stop_if_not_exists()
     current_dt = utils.current_datetime_str()
     experiment_run_dir = conduct_settings.experiment_dir / current_dt
-    for g in participant_schedule.games:
-        game_dir = experiment_run_dir / g
+    for g in participant_schedule.games_with_latencies:
+        game_dir = experiment_run_dir / g.game
         raw = conduct_settings.model_dump()
 
         # remove conflicting keys
-        raw.pop("games", None)
-        raw.pop("latencies", None)
+        raw.pop("games_with_latencies", None)
         ctx = settings.GameContext(
             **raw,
-            games=participant_schedule.games,
-            latencies=participant_schedule.latencies,
+            games_with_latencies=participant_schedule.games_with_latencies,
             game_dir=game_dir,
-            game=g,
+            game_with_latencies=g,
         )
         pathlib.Path(ctx.game_dir).mkdir(parents=True, exist_ok=True)
-        match g:
-            case settings.Game.FITTS:
+        match g.game:
+            case types.Game.FITTS:
                 fitts.start(ctx)
-            case settings.Game.FEEDING_FRENZY:
+            case types.Game.FEEDING_FRENZY:
                 feeding_frenzy.start(ctx)
-            case settings.Game.ROCKET_LEAGUE:
+            case types.Game.ROCKET_LEAGUE:
                 rocket_league.start(ctx)
-            case settings.Game.DAVE_THE_DIVER:
+            case types.Game.DAVE_THE_DIVER:
                 dave_the_diver.start(ctx)
-            case settings.Game.HALF_LIFE_2:
+            case types.Game.HALF_LIFE_2:
                 half_life_2.start(ctx)
     thanks.popup_thank_you_banner()
 
@@ -121,14 +121,14 @@ class Conduct(settings.ConductSettings):
 
 
 def schedule(schedule_settings: settings.ScheduleSettings) -> None:
-    schedule_obj = schedule_mod.generate(schedule_settings)
-    if schedule_settings.out is None:
+    schedule_obj = schedule_mod.generate(schedule_settings.games_with_latencies)
+    if schedule_settings.output is None:
         logger.info("generated schedule %s", schedule_obj)
         return
 
-    with schedule_settings.out.open("w", newline="", encoding="utf-8") as f:
-        schedule_obj.to_csv(f)
-    logger.info("exported schedule to %s", schedule_settings.out)
+    with schedule_settings.output.open("w", newline="", encoding="utf-8") as f:
+        schedule_obj.to_json(f)
+    logger.info("exported schedule to %s", schedule_settings.output)
 
 
 class Schedule(settings.ScheduleSettings):
@@ -144,12 +144,12 @@ def monitor(monitor_settings: settings.MonitorSettings) -> None:
     pathlib.Path(monitoring_run_dir).mkdir(parents=True, exist_ok=True)
     listeners: list[pynput.keyboard.Listener | pynput.mouse.Listener] = []
     match monitor_settings.monitor_choice:
-        case settings.MonitoringChoice.ALL:
+        case types.MonitoringChoice.ALL:
             listeners.append(keyboard.start(monitoring_run_dir / constants.KEYBOARD_LOG))
             listeners.append(mouse.start(monitoring_run_dir / constants.MOUSE_LOG))
-        case settings.MonitoringChoice.KEYBOARD:
+        case types.MonitoringChoice.KEYBOARD:
             listeners.append(keyboard.start(monitoring_run_dir / constants.KEYBOARD_LOG))
-        case settings.MonitoringChoice.MOUSE:
+        case types.MonitoringChoice.MOUSE:
             listeners.append(mouse.start(monitoring_run_dir / constants.MOUSE_LOG))
 
     logger.info("Listener(s) running. Kill the currently running terminal if you want to stop.")
