@@ -97,7 +97,7 @@ def play_round(
 
     # exit match, save replay and return to main menu
     pyautogui.press("esc")  # pop up options
-    pyautogui.click(950, 685, interval=0.2)  # enter leave match
+    pyautogui.click(950, 725, interval=0.2)  # enter leave match
     pyautogui.click(858, 617, interval=2)  # confirm leave match
     pyautogui.click(207, 695, interval=0.2)  # profile
     pyautogui.click(207, 645, interval=0.2)  # match history

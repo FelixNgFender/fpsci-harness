@@ -77,13 +77,12 @@ def play_round(
 
     if not skip_menu:
         while is_not_in_menu():
-            time.sleep(1)
             continue
 
         pydirectinput.press("space")  # continue
 
         while is_not_on_boat():
-            time.sleep(0.1)
+            pydirectinput.press("space", presses=3, interval=0.1)  # more than 2 for resiliency
             continue
 
     pydirectinput.press("space", presses=10, interval=0.1)  # more than 2 for resiliency
