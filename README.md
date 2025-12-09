@@ -18,8 +18,14 @@ uv sync
 Start the harness CLI:
 
 ```shell
-harness
+harness 
 ```
+
+Conduct a experiment for a participant from a schedule:
+```shell
+harness conduct --participant [NUMBER 0-40]
+```
+For help on specific commands in the harness, add a '-h' flag to get help.
 
 ## Install ruff & pylance code extensions
 These extensions are needed for formatting and type checking before pushing code. To install, follow these steps.
