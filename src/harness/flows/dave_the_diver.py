@@ -40,7 +40,7 @@ def start(game_settings: settings.GameContext) -> None:
 
     play_round(
         test_round_dir,
-        duration_s=game_settings.game_duration,
+        duration_s=game_settings.game_with_latencies.duration,
         is_test=True,
         skip_menu=False,
     )
@@ -52,7 +52,7 @@ def start(game_settings: settings.GameContext) -> None:
         pathlib.Path(round_dir).mkdir(parents=True, exist_ok=True)
         play_round(
             round_dir,
-            duration_s=game_settings.game_duration,
+            duration_s=game_settings.game_with_latencies.duration,
             latency_ms=latency_ms,
         )
         qoe.popup_qoe_questionnaire(round_dir / constants.QOE_ANSWERS)

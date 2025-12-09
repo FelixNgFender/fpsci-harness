@@ -64,11 +64,6 @@ class ExperimentSettings(LogSettings):
 class StartSettings(ExperimentSettings, MonitorSettings):
     """Settings for the `start` CLI subcommand."""
 
-    game_duration: Annotated[
-        int,
-        pydantic.Field(description="Duration of each game round (s)"),
-    ] = constants.DEFAULT_DURATION
-
     model_config = pydantic_settings.SettingsConfigDict(env_file=".env", extra="ignore")
 
 
