@@ -5,28 +5,29 @@ from typing import IO
 
 import pydantic
 
-from harness import types
+from harness import constants, types
 
 logger = logging.getLogger(__name__)
 
 
 class ParticipantSchedule(pydantic.BaseModel):
-    participant: int
+    id: int
     games_with_latencies: list[types.GameWithLatencies]
 
 
 class Schedule(pydantic.BaseModel):
-    participants: list[ParticipantSchedule]
+    schedules: list[ParticipantSchedule]
 
     def to_json(self, out: IO | pathlib.Path) -> None:
         """Write schedule to a JSON file or file-like object."""
         data = []
-        for item in self.participants:
+        for item in self.schedules:
             entry = {
-                "participant": item.participant,
+                "id": item.id,
                 "games_with_latencies": [
                     {
                         "game": gwl.game.value,
+                        "duration": gwl.duration,
                         "latencies": list(gwl.latencies),
                     }
                     for gwl in item.games_with_latencies
@@ -46,26 +47,27 @@ class Schedule(pydantic.BaseModel):
         with path.open("r", encoding="utf8") as f:
             raw = json.load(f)
 
-        participants = []
+        schedules = []
         for entry in raw:
-            participant = int(entry["participant"])
+            sid = int(entry["id"])
 
             games_with_latencies = [
                 types.GameWithLatencies(
                     game=types.Game(g["game"]),
+                    duration=int(g["duration"]),
                     latencies=tuple(g["latencies"]),
                 )
                 for g in entry["games_with_latencies"]
             ]
 
-            participants.append(
+            schedules.append(
                 ParticipantSchedule(
-                    participant=participant,
+                    id=sid,
                     games_with_latencies=games_with_latencies,
                 )
             )
 
-        return Schedule(participants=participants)
+        return Schedule(schedules=schedules)
 
 
 def _cyclic_latin_square(n: int) -> list[list[int]]:
@@ -76,41 +78,42 @@ def generate(games_with_latencies: list[types.GameWithLatencies]) -> Schedule:
     """
     Counterbalances:
       - game order (Latin square, size = number of games)
-      - latency order (Latin square, size = 3)
+      - latency order (Latin square, size = 4)
     """
 
     games = games_with_latencies
     n_games = len(games)
 
     game_ls = _cyclic_latin_square(n_games)
-    latency_ls = _cyclic_latin_square(3)  # LO/MED/HI
+    latency_ls = _cyclic_latin_square(len(constants.DEFAULT_LATENCIES))
 
-    participants = []
-    pid = 0
+    schedules = []
+    sid = 0
 
     for game_row in game_ls:
         for lat_row in latency_ls:
-            pid += 1
+            sid += 1
 
             reordered = []
             for g_idx in game_row:
                 gwl = games[g_idx]
 
                 # reorder latencies via LS
-                new_latencies: tuple[int, int, int] = tuple(gwl.latencies[i] for i in lat_row)  # pyright: ignore[reportAssignmentType]
+                new_latencies: tuple[int, int, int, int] = tuple(gwl.latencies[i] for i in lat_row)  # pyright: ignore[reportAssignmentType]
 
                 reordered.append(
                     types.GameWithLatencies(
                         game=gwl.game,
+                        duration=gwl.duration,
                         latencies=new_latencies,
                     )
                 )
 
-            participants.append(
+            schedules.append(
                 ParticipantSchedule(
-                    participant=pid,
+                    id=sid,
                     games_with_latencies=reordered,
                 )
             )
 
-    return Schedule(participants=participants)
+    return Schedule(schedules=schedules)

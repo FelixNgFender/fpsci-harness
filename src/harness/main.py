@@ -66,7 +66,7 @@ def conduct(conduct_settings: settings.ConductSettings) -> None:
         if conduct_settings.input is None
         else schedule_mod.Schedule.load_json(conduct_settings.input)
     )
-    participant_schedule = schedule_obj.participants[conduct_settings.participant - 1]
+    participant_schedule = schedule_obj.schedules[(conduct_settings.participant - 1) % len(schedule_obj.schedules)]
     # start from starting game if specified
     if conduct_settings.starting_game is not None:
         games = [g.game for g in participant_schedule.games_with_latencies]
@@ -106,7 +106,7 @@ def conduct(conduct_settings: settings.ConductSettings) -> None:
     thanks.popup_thank_you_banner()
 
     # back up qoe data
-    backup_dir = constants.BACKUP_DIR / str(participant_schedule.participant) / current_dt
+    backup_dir = constants.BACKUP_DIR / str(conduct_settings.participant) / current_dt
     shutil.copytree(src=experiment_run_dir, dst=backup_dir)
 
 

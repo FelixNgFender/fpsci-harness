@@ -1,675 +1,1100 @@
 [
   {
-    "participant": 1,
+    "id": 1,
     "games_with_latencies": [
       {
         "game": "fitts_law",
+        "duration": 30,
         "latencies": [
-          70,
-          130,
-          190
+          0,
+          75,
+          150,
+          225
         ]
       },
       {
         "game": "feeding_frenzy",
+        "duration": 30,
         "latencies": [
-          137,
-          250,
-          363
+          0,
+          75,
+          150,
+          225
         ]
       },
       {
         "game": "rocket_league",
+        "duration": 90,
         "latencies": [
-          133,
-          200,
-          267
+          0,
+          75,
+          150,
+          225
         ]
       },
       {
         "game": "dave_the_diver",
+        "duration": 60,
         "latencies": [
-          123,
-          210,
-          297
+          0,
+          75,
+          150,
+          225
         ]
       },
       {
         "game": "half_life_2",
+        "duration": 30,
         "latencies": [
-          87,
-          140,
-          193
+          0,
+          75,
+          150,
+          225
         ]
       }
     ]
   },
   {
-    "participant": 2,
+    "id": 2,
     "games_with_latencies": [
       {
         "game": "fitts_law",
+        "duration": 30,
         "latencies": [
-          130,
-          190,
-          70
+          75,
+          150,
+          225,
+          0
         ]
       },
       {
         "game": "feeding_frenzy",
+        "duration": 30,
         "latencies": [
-          250,
-          363,
-          137
+          75,
+          150,
+          225,
+          0
         ]
       },
       {
         "game": "rocket_league",
+        "duration": 90,
         "latencies": [
-          200,
-          267,
-          133
+          75,
+          150,
+          225,
+          0
         ]
       },
       {
         "game": "dave_the_diver",
+        "duration": 60,
         "latencies": [
-          210,
-          297,
-          123
+          75,
+          150,
+          225,
+          0
         ]
       },
       {
         "game": "half_life_2",
+        "duration": 30,
         "latencies": [
-          140,
-          193,
-          87
+          75,
+          150,
+          225,
+          0
         ]
       }
     ]
   },
   {
-    "participant": 3,
+    "id": 3,
     "games_with_latencies": [
       {
         "game": "fitts_law",
+        "duration": 30,
         "latencies": [
-          190,
-          70,
-          130
+          150,
+          225,
+          0,
+          75
         ]
       },
       {
         "game": "feeding_frenzy",
+        "duration": 30,
         "latencies": [
-          363,
-          137,
-          250
+          150,
+          225,
+          0,
+          75
         ]
       },
       {
         "game": "rocket_league",
+        "duration": 90,
         "latencies": [
-          267,
-          133,
-          200
+          150,
+          225,
+          0,
+          75
         ]
       },
       {
         "game": "dave_the_diver",
+        "duration": 60,
         "latencies": [
-          297,
-          123,
-          210
+          150,
+          225,
+          0,
+          75
         ]
       },
       {
         "game": "half_life_2",
+        "duration": 30,
         "latencies": [
-          193,
-          87,
-          140
+          150,
+          225,
+          0,
+          75
         ]
       }
     ]
   },
   {
-    "participant": 4,
+    "id": 4,
     "games_with_latencies": [
       {
-        "game": "feeding_frenzy",
+        "game": "fitts_law",
+        "duration": 30,
         "latencies": [
-          137,
-          250,
-          363
+          225,
+          0,
+          75,
+          150
+        ]
+      },
+      {
+        "game": "feeding_frenzy",
+        "duration": 30,
+        "latencies": [
+          225,
+          0,
+          75,
+          150
         ]
       },
       {
         "game": "rocket_league",
+        "duration": 90,
         "latencies": [
-          133,
-          200,
-          267
+          225,
+          0,
+          75,
+          150
         ]
       },
       {
         "game": "dave_the_diver",
+        "duration": 60,
         "latencies": [
-          123,
-          210,
-          297
+          225,
+          0,
+          75,
+          150
         ]
       },
       {
         "game": "half_life_2",
+        "duration": 30,
         "latencies": [
-          87,
-          140,
-          193
-        ]
-      },
-      {
-        "game": "fitts_law",
-        "latencies": [
-          70,
-          130,
-          190
+          225,
+          0,
+          75,
+          150
         ]
       }
     ]
   },
   {
-    "participant": 5,
+    "id": 5,
     "games_with_latencies": [
       {
         "game": "feeding_frenzy",
+        "duration": 30,
         "latencies": [
-          250,
-          363,
-          137
+          0,
+          75,
+          150,
+          225
         ]
       },
       {
         "game": "rocket_league",
+        "duration": 90,
         "latencies": [
-          200,
-          267,
-          133
+          0,
+          75,
+          150,
+          225
         ]
       },
       {
         "game": "dave_the_diver",
+        "duration": 60,
         "latencies": [
-          210,
-          297,
-          123
+          0,
+          75,
+          150,
+          225
         ]
       },
       {
         "game": "half_life_2",
+        "duration": 30,
         "latencies": [
-          140,
-          193,
-          87
+          0,
+          75,
+          150,
+          225
         ]
       },
       {
         "game": "fitts_law",
+        "duration": 30,
         "latencies": [
-          130,
-          190,
-          70
+          0,
+          75,
+          150,
+          225
         ]
       }
     ]
   },
   {
-    "participant": 6,
+    "id": 6,
     "games_with_latencies": [
       {
         "game": "feeding_frenzy",
+        "duration": 30,
         "latencies": [
-          363,
-          137,
-          250
+          75,
+          150,
+          225,
+          0
         ]
       },
       {
         "game": "rocket_league",
+        "duration": 90,
         "latencies": [
-          267,
-          133,
-          200
+          75,
+          150,
+          225,
+          0
         ]
       },
       {
         "game": "dave_the_diver",
+        "duration": 60,
         "latencies": [
-          297,
-          123,
-          210
+          75,
+          150,
+          225,
+          0
         ]
       },
       {
         "game": "half_life_2",
+        "duration": 30,
         "latencies": [
-          193,
-          87,
-          140
+          75,
+          150,
+          225,
+          0
         ]
       },
       {
         "game": "fitts_law",
+        "duration": 30,
         "latencies": [
-          190,
-          70,
-          130
+          75,
+          150,
+          225,
+          0
         ]
       }
     ]
   },
   {
-    "participant": 7,
+    "id": 7,
     "games_with_latencies": [
       {
-        "game": "rocket_league",
+        "game": "feeding_frenzy",
+        "duration": 30,
         "latencies": [
-          133,
-          200,
-          267
+          150,
+          225,
+          0,
+          75
+        ]
+      },
+      {
+        "game": "rocket_league",
+        "duration": 90,
+        "latencies": [
+          150,
+          225,
+          0,
+          75
         ]
       },
       {
         "game": "dave_the_diver",
+        "duration": 60,
         "latencies": [
-          123,
-          210,
-          297
+          150,
+          225,
+          0,
+          75
         ]
       },
       {
         "game": "half_life_2",
+        "duration": 30,
         "latencies": [
-          87,
-          140,
-          193
+          150,
+          225,
+          0,
+          75
         ]
       },
       {
         "game": "fitts_law",
+        "duration": 30,
         "latencies": [
-          70,
-          130,
-          190
-        ]
-      },
-      {
-        "game": "feeding_frenzy",
-        "latencies": [
-          137,
-          250,
-          363
+          150,
+          225,
+          0,
+          75
         ]
       }
     ]
   },
   {
-    "participant": 8,
+    "id": 8,
     "games_with_latencies": [
       {
-        "game": "rocket_league",
+        "game": "feeding_frenzy",
+        "duration": 30,
         "latencies": [
-          200,
-          267,
-          133
+          225,
+          0,
+          75,
+          150
+        ]
+      },
+      {
+        "game": "rocket_league",
+        "duration": 90,
+        "latencies": [
+          225,
+          0,
+          75,
+          150
         ]
       },
       {
         "game": "dave_the_diver",
+        "duration": 60,
         "latencies": [
-          210,
-          297,
-          123
+          225,
+          0,
+          75,
+          150
         ]
       },
       {
         "game": "half_life_2",
+        "duration": 30,
         "latencies": [
-          140,
-          193,
-          87
+          225,
+          0,
+          75,
+          150
         ]
       },
       {
         "game": "fitts_law",
+        "duration": 30,
         "latencies": [
-          130,
-          190,
-          70
-        ]
-      },
-      {
-        "game": "feeding_frenzy",
-        "latencies": [
-          250,
-          363,
-          137
+          225,
+          0,
+          75,
+          150
         ]
       }
     ]
   },
   {
-    "participant": 9,
+    "id": 9,
     "games_with_latencies": [
       {
         "game": "rocket_league",
+        "duration": 90,
         "latencies": [
-          267,
-          133,
-          200
+          0,
+          75,
+          150,
+          225
         ]
       },
       {
         "game": "dave_the_diver",
+        "duration": 60,
         "latencies": [
-          297,
-          123,
-          210
+          0,
+          75,
+          150,
+          225
         ]
       },
       {
         "game": "half_life_2",
+        "duration": 30,
         "latencies": [
-          193,
-          87,
-          140
+          0,
+          75,
+          150,
+          225
         ]
       },
       {
         "game": "fitts_law",
+        "duration": 30,
         "latencies": [
-          190,
-          70,
-          130
+          0,
+          75,
+          150,
+          225
         ]
       },
       {
         "game": "feeding_frenzy",
+        "duration": 30,
         "latencies": [
-          363,
-          137,
-          250
+          0,
+          75,
+          150,
+          225
         ]
       }
     ]
   },
   {
-    "participant": 10,
+    "id": 10,
     "games_with_latencies": [
       {
-        "game": "dave_the_diver",
+        "game": "rocket_league",
+        "duration": 90,
         "latencies": [
-          123,
-          210,
-          297
+          75,
+          150,
+          225,
+          0
+        ]
+      },
+      {
+        "game": "dave_the_diver",
+        "duration": 60,
+        "latencies": [
+          75,
+          150,
+          225,
+          0
         ]
       },
       {
         "game": "half_life_2",
+        "duration": 30,
         "latencies": [
-          87,
-          140,
-          193
+          75,
+          150,
+          225,
+          0
         ]
       },
       {
         "game": "fitts_law",
+        "duration": 30,
         "latencies": [
-          70,
-          130,
-          190
+          75,
+          150,
+          225,
+          0
         ]
       },
       {
         "game": "feeding_frenzy",
+        "duration": 30,
         "latencies": [
-          137,
-          250,
-          363
-        ]
-      },
-      {
-        "game": "rocket_league",
-        "latencies": [
-          133,
-          200,
-          267
+          75,
+          150,
+          225,
+          0
         ]
       }
     ]
   },
   {
-    "participant": 11,
+    "id": 11,
     "games_with_latencies": [
       {
-        "game": "dave_the_diver",
+        "game": "rocket_league",
+        "duration": 90,
         "latencies": [
-          210,
-          297,
-          123
+          150,
+          225,
+          0,
+          75
+        ]
+      },
+      {
+        "game": "dave_the_diver",
+        "duration": 60,
+        "latencies": [
+          150,
+          225,
+          0,
+          75
         ]
       },
       {
         "game": "half_life_2",
+        "duration": 30,
         "latencies": [
-          140,
-          193,
-          87
+          150,
+          225,
+          0,
+          75
         ]
       },
       {
         "game": "fitts_law",
+        "duration": 30,
         "latencies": [
-          130,
-          190,
-          70
+          150,
+          225,
+          0,
+          75
         ]
       },
       {
         "game": "feeding_frenzy",
+        "duration": 30,
         "latencies": [
-          250,
-          363,
-          137
-        ]
-      },
-      {
-        "game": "rocket_league",
-        "latencies": [
-          200,
-          267,
-          133
+          150,
+          225,
+          0,
+          75
         ]
       }
     ]
   },
   {
-    "participant": 12,
+    "id": 12,
     "games_with_latencies": [
       {
-        "game": "dave_the_diver",
+        "game": "rocket_league",
+        "duration": 90,
         "latencies": [
-          297,
-          123,
-          210
+          225,
+          0,
+          75,
+          150
+        ]
+      },
+      {
+        "game": "dave_the_diver",
+        "duration": 60,
+        "latencies": [
+          225,
+          0,
+          75,
+          150
         ]
       },
       {
         "game": "half_life_2",
+        "duration": 30,
         "latencies": [
-          193,
-          87,
-          140
+          225,
+          0,
+          75,
+          150
         ]
       },
       {
         "game": "fitts_law",
+        "duration": 30,
         "latencies": [
-          190,
-          70,
-          130
+          225,
+          0,
+          75,
+          150
         ]
       },
       {
         "game": "feeding_frenzy",
+        "duration": 30,
         "latencies": [
-          363,
-          137,
-          250
-        ]
-      },
-      {
-        "game": "rocket_league",
-        "latencies": [
-          267,
-          133,
-          200
+          225,
+          0,
+          75,
+          150
         ]
       }
     ]
   },
   {
-    "participant": 13,
+    "id": 13,
     "games_with_latencies": [
       {
-        "game": "half_life_2",
+        "game": "dave_the_diver",
+        "duration": 60,
         "latencies": [
-          87,
-          140,
-          193
+          0,
+          75,
+          150,
+          225
+        ]
+      },
+      {
+        "game": "half_life_2",
+        "duration": 30,
+        "latencies": [
+          0,
+          75,
+          150,
+          225
         ]
       },
       {
         "game": "fitts_law",
+        "duration": 30,
         "latencies": [
-          70,
-          130,
-          190
+          0,
+          75,
+          150,
+          225
         ]
       },
       {
         "game": "feeding_frenzy",
+        "duration": 30,
         "latencies": [
-          137,
-          250,
-          363
+          0,
+          75,
+          150,
+          225
         ]
       },
       {
         "game": "rocket_league",
+        "duration": 90,
         "latencies": [
-          133,
-          200,
-          267
-        ]
-      },
-      {
-        "game": "dave_the_diver",
-        "latencies": [
-          123,
-          210,
-          297
+          0,
+          75,
+          150,
+          225
         ]
       }
     ]
   },
   {
-    "participant": 14,
+    "id": 14,
     "games_with_latencies": [
       {
-        "game": "half_life_2",
+        "game": "dave_the_diver",
+        "duration": 60,
         "latencies": [
-          140,
-          193,
-          87
+          75,
+          150,
+          225,
+          0
+        ]
+      },
+      {
+        "game": "half_life_2",
+        "duration": 30,
+        "latencies": [
+          75,
+          150,
+          225,
+          0
         ]
       },
       {
         "game": "fitts_law",
+        "duration": 30,
         "latencies": [
-          130,
-          190,
-          70
+          75,
+          150,
+          225,
+          0
         ]
       },
       {
         "game": "feeding_frenzy",
+        "duration": 30,
         "latencies": [
-          250,
-          363,
-          137
+          75,
+          150,
+          225,
+          0
         ]
       },
       {
         "game": "rocket_league",
+        "duration": 90,
         "latencies": [
-          200,
-          267,
-          133
-        ]
-      },
-      {
-        "game": "dave_the_diver",
-        "latencies": [
-          210,
-          297,
-          123
+          75,
+          150,
+          225,
+          0
         ]
       }
     ]
   },
   {
-    "participant": 15,
+    "id": 15,
     "games_with_latencies": [
       {
-        "game": "half_life_2",
+        "game": "dave_the_diver",
+        "duration": 60,
         "latencies": [
-          193,
-          87,
-          140
+          150,
+          225,
+          0,
+          75
+        ]
+      },
+      {
+        "game": "half_life_2",
+        "duration": 30,
+        "latencies": [
+          150,
+          225,
+          0,
+          75
         ]
       },
       {
         "game": "fitts_law",
+        "duration": 30,
         "latencies": [
-          190,
-          70,
-          130
+          150,
+          225,
+          0,
+          75
         ]
       },
       {
         "game": "feeding_frenzy",
+        "duration": 30,
         "latencies": [
-          363,
-          137,
-          250
+          150,
+          225,
+          0,
+          75
         ]
       },
       {
         "game": "rocket_league",
+        "duration": 90,
         "latencies": [
-          267,
-          133,
-          200
+          150,
+          225,
+          0,
+          75
+        ]
+      }
+    ]
+  },
+  {
+    "id": 16,
+    "games_with_latencies": [
+      {
+        "game": "dave_the_diver",
+        "duration": 60,
+        "latencies": [
+          225,
+          0,
+          75,
+          150
+        ]
+      },
+      {
+        "game": "half_life_2",
+        "duration": 30,
+        "latencies": [
+          225,
+          0,
+          75,
+          150
+        ]
+      },
+      {
+        "game": "fitts_law",
+        "duration": 30,
+        "latencies": [
+          225,
+          0,
+          75,
+          150
+        ]
+      },
+      {
+        "game": "feeding_frenzy",
+        "duration": 30,
+        "latencies": [
+          225,
+          0,
+          75,
+          150
+        ]
+      },
+      {
+        "game": "rocket_league",
+        "duration": 90,
+        "latencies": [
+          225,
+          0,
+          75,
+          150
+        ]
+      }
+    ]
+  },
+  {
+    "id": 17,
+    "games_with_latencies": [
+      {
+        "game": "half_life_2",
+        "duration": 30,
+        "latencies": [
+          0,
+          75,
+          150,
+          225
+        ]
+      },
+      {
+        "game": "fitts_law",
+        "duration": 30,
+        "latencies": [
+          0,
+          75,
+          150,
+          225
+        ]
+      },
+      {
+        "game": "feeding_frenzy",
+        "duration": 30,
+        "latencies": [
+          0,
+          75,
+          150,
+          225
+        ]
+      },
+      {
+        "game": "rocket_league",
+        "duration": 90,
+        "latencies": [
+          0,
+          75,
+          150,
+          225
         ]
       },
       {
         "game": "dave_the_diver",
+        "duration": 60,
         "latencies": [
-          297,
-          123,
-          210
+          0,
+          75,
+          150,
+          225
+        ]
+      }
+    ]
+  },
+  {
+    "id": 18,
+    "games_with_latencies": [
+      {
+        "game": "half_life_2",
+        "duration": 30,
+        "latencies": [
+          75,
+          150,
+          225,
+          0
+        ]
+      },
+      {
+        "game": "fitts_law",
+        "duration": 30,
+        "latencies": [
+          75,
+          150,
+          225,
+          0
+        ]
+      },
+      {
+        "game": "feeding_frenzy",
+        "duration": 30,
+        "latencies": [
+          75,
+          150,
+          225,
+          0
+        ]
+      },
+      {
+        "game": "rocket_league",
+        "duration": 90,
+        "latencies": [
+          75,
+          150,
+          225,
+          0
+        ]
+      },
+      {
+        "game": "dave_the_diver",
+        "duration": 60,
+        "latencies": [
+          75,
+          150,
+          225,
+          0
+        ]
+      }
+    ]
+  },
+  {
+    "id": 19,
+    "games_with_latencies": [
+      {
+        "game": "half_life_2",
+        "duration": 30,
+        "latencies": [
+          150,
+          225,
+          0,
+          75
+        ]
+      },
+      {
+        "game": "fitts_law",
+        "duration": 30,
+        "latencies": [
+          150,
+          225,
+          0,
+          75
+        ]
+      },
+      {
+        "game": "feeding_frenzy",
+        "duration": 30,
+        "latencies": [
+          150,
+          225,
+          0,
+          75
+        ]
+      },
+      {
+        "game": "rocket_league",
+        "duration": 90,
+        "latencies": [
+          150,
+          225,
+          0,
+          75
+        ]
+      },
+      {
+        "game": "dave_the_diver",
+        "duration": 60,
+        "latencies": [
+          150,
+          225,
+          0,
+          75
+        ]
+      }
+    ]
+  },
+  {
+    "id": 20,
+    "games_with_latencies": [
+      {
+        "game": "half_life_2",
+        "duration": 30,
+        "latencies": [
+          225,
+          0,
+          75,
+          150
+        ]
+      },
+      {
+        "game": "fitts_law",
+        "duration": 30,
+        "latencies": [
+          225,
+          0,
+          75,
+          150
+        ]
+      },
+      {
+        "game": "feeding_frenzy",
+        "duration": 30,
+        "latencies": [
+          225,
+          0,
+          75,
+          150
+        ]
+      },
+      {
+        "game": "rocket_league",
+        "duration": 90,
+        "latencies": [
+          225,
+          0,
+          75,
+          150
+        ]
+      },
+      {
+        "game": "dave_the_diver",
+        "duration": 60,
+        "latencies": [
+          225,
+          0,
+          75,
+          150
         ]
       }
     ]

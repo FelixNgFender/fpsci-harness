@@ -82,7 +82,7 @@ class ConductSettings(StartSettings):
             "schedule if this is not specified."
         ),
     ] = None
-    participant: Annotated[int, pydantic.Field(description="Participant ID in the schedule")]
+    participant: Annotated[int, pydantic.Field(description="Participant ID to run schedule for")]
     starting_game: Annotated[
         types.Game | None,
         pydantic.Field(

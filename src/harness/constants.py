@@ -4,12 +4,13 @@ from harness import types
 
 # General
 DEFAULT_EXPERIMENT_PATH = pathlib.Path("experiment")
+DEFAULT_LATENCIES = (0, 75, 150, 225)
 DEFAULT_GAMES_WITH_LATENCIES: list[types.GameWithLatencies] = [
-    types.GameWithLatencies(types.Game.FITTS, (70, 130, 190)),
-    types.GameWithLatencies(types.Game.FEEDING_FRENZY, (137, 250, 363)),
-    types.GameWithLatencies(types.Game.ROCKET_LEAGUE, (133, 200, 267)),
-    types.GameWithLatencies(types.Game.DAVE_THE_DIVER, (123, 210, 297)),
-    types.GameWithLatencies(types.Game.HALF_LIFE_2, (87, 140, 193)),
+    types.GameWithLatencies(types.Game.FITTS, 30, DEFAULT_LATENCIES),
+    types.GameWithLatencies(types.Game.FEEDING_FRENZY, 30, DEFAULT_LATENCIES),
+    types.GameWithLatencies(types.Game.ROCKET_LEAGUE, 90, DEFAULT_LATENCIES),
+    types.GameWithLatencies(types.Game.DAVE_THE_DIVER, 60, DEFAULT_LATENCIES),
+    types.GameWithLatencies(types.Game.HALF_LIFE_2, 30, DEFAULT_LATENCIES),
 ]
 DEFAULT_DURATION = 60
 ASSETS_DIR = pathlib.Path("assets")

@@ -20,4 +20,5 @@ class MonitoringChoice(enum.StrEnum):
 
 class GameWithLatencies(NamedTuple):
     game: Game
-    latencies: tuple[int, int, int]  # always low, medium, high order
+    duration: int
+    latencies: tuple[int, int, int, int]
