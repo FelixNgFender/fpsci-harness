@@ -1,26 +1,7 @@
-P0: rocket league and dave the diver seems to be broken
+P1: Fix TODO's at start of each game
 
-P0: dave the diver very laggy when start
+P1: Take out "Please go back to game for another round"
 
-P0: discuss if there should be a hard time limit for fitts or we just let them finish
-
-P0: Take out the 'this is a tutorial screen' in fitts law
-
-P0: Take out "Please go back to game for another round"
-
-
-P0: Add a progress bar or progression per round (such as round 5/7)
-
+P0: Go through a failure scenario where the user ends the game prematurley or script os killed, go through runbook
 
 P0: e2e testing A LOT
-
-
-P1: Talk to Nvidia about working document for continuous feedback
-
-
-P2: adapt qoe questionnaire to our questions
-
-
-P2: substitute placeholder feeding frenzy tutorial with quick screenshot based directions
-
-P2: huy replicate and tryna fix the dave the diver freezing in menu bug (rare case)
