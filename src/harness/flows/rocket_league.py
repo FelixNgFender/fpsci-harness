@@ -114,6 +114,6 @@ def play_round(
 
 
 def is_in_menu() -> bool:
-    return pyautogui.pixelMatchesColor(116, 966, (32, 65, 86), tolerance=10) and pyautogui.pixelMatchesColor(
-        583, 69, (134, 50, 45), tolerance=10
+    return pyautogui.pixelMatchesColor(47, 946, (39, 49, 19), tolerance=10) and pyautogui.pixelMatchesColor(
+        270, 949, (43, 54, 20), tolerance=10
     )
