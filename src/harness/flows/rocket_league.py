@@ -78,7 +78,7 @@ def play_round(
     pyautogui.click(1400, 612, interval=0.2)  # enter private match
     pyautogui.click(741, 345, interval=0.2)  # enter create private match
     pyautogui.click(540, 797, interval=0.2)  # enter create match
-    pyautogui.click(856, 650, interval=3)  # enter create match with password
+    pyautogui.click(856, 650, interval=4)  # enter create match with password
     pyautogui.click(350, 375, interval=3)  # enter join orange
     time.sleep(3)  # match start time
 
@@ -97,7 +97,7 @@ def play_round(
 
     # exit match, save replay and return to main menu
     pyautogui.press("esc")  # pop up options
-    pyautogui.click(950, 725, interval=0.2)  # enter leave match
+    pyautogui.click(975, 680, interval=0.2)  # enter leave match
     pyautogui.click(858, 617, interval=2)  # confirm leave match
     pyautogui.click(207, 695, interval=0.2)  # profile
     pyautogui.click(207, 645, interval=0.2)  # match history

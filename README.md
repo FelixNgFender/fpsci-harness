@@ -18,14 +18,15 @@ uv sync
 Start the harness CLI:
 
 ```shell
-harness 
+harness
 ```
 
 Conduct a experiment for a participant from a schedule:
 ```shell
-harness conduct --participant [NUMBER 0-40]
+harness conduct --participant [NUMBER 1-40]
 ```
-For help on specific commands in the harness, add a '-h' flag to get help.
+
+In case the harness is bugged out during a specific game, exit and restart or start the next game in a schedule with the `--starting-game [dave_the_diver, half_life_2, fitts_law, feeding_frenzy, rocket_league]` flag. For help on specific commands in the harness, add a '-h' flag to get help.
 
 ## Install ruff & pylance code extensions
 These extensions are needed for formatting and type checking before pushing code. To install, follow these steps.
@@ -44,12 +45,8 @@ as setting flags manually on the command line. An example:
 ```bash
 # .env
 VERBOSE=True
-RANDOMIZE_GAMES=False
-RANDOMIZE_LATENCIES=False
-GAME_DURATION=3
 ```
-This will make `harness start` emits extra debug logs, doesn't randomize games and latencies
-and each game round will last 3 seconds.
+This will make `harness start` emits extra debug logs.
 
 ## Formatting and Typecheck
 

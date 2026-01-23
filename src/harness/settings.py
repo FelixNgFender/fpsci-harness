@@ -85,6 +85,10 @@ class ConductSettings(StartSettings):
             "Start at the beginning if null."
         ),
     ] = None
+    pyautogui_failsafe: Annotated[
+        bool,
+        pydantic.Field(description="Whether to enable pyautogui's fail-safe."),
+    ] = True
 
     model_config = pydantic_settings.SettingsConfigDict(env_file=".env", extra="ignore")
 
