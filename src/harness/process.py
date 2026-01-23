@@ -31,7 +31,7 @@ def kill_process(p: subprocess.Popen) -> None:
 def focus_window(window_title: str, interval: float = 1) -> None:
     while True:
         with contextlib.suppress(IndexError):
-            win = pyautogui.getWindowsWithTitle(window_title)[0]  # ty: ignore[unresolved-attribute]
+            win = pyautogui.getWindowsWithTitle(window_title)[0]
             win.activate()
             return
         time.sleep(interval)
