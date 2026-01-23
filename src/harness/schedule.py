@@ -99,7 +99,7 @@ def generate(games_with_latencies: list[types.GameWithLatencies]) -> Schedule:
                 gwl = games[g_idx]
 
                 # reorder latencies via LS
-                new_latencies: tuple[int, int, int, int] = tuple(gwl.latencies[i] for i in lat_row)  # pyright: ignore[reportAssignmentType]
+                new_latencies: tuple[int, ...] = tuple(gwl.latencies[i] for i in lat_row)
 
                 reordered.append(
                     types.GameWithLatencies(

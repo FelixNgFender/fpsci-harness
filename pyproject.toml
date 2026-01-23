@@ -5,29 +5,25 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "fuzzywuzzy[speedup]>=0.18.0",
-    "jinja2>=3.1.6",
-    "pillow>=12.0.0",
-    "pyautogui>=0.9.54",
-    "pydantic>=2.12.3",
-    "pydantic-settings>=2.11.0",
-    "pydirectinput>=1.0.4",
-    "pynput>=1.8.1",
-    "pyscreeze>=1.0.1",
-    "pytesseract>=0.3.13",
-    "python-vlc>=3.0.21203",
-    "pywinauto>=0.6.9",
-    "rich>=14.2.0",
-    "selenium>=4.38.0",
-    "tk>=0.1.0",
+  "fuzzywuzzy[speedup]>=0.18.0",
+  "jinja2>=3.1.6",
+  "pillow>=12.0.0",
+  "pyautogui>=0.9.54",
+  "pydantic>=2.12.3",
+  "pydantic-settings>=2.11.0",
+  "pydirectinput>=1.0.4",
+  "pynput>=1.8.1",
+  "pyscreeze>=1.0.1",
+  "pytesseract>=0.3.13",
+  "python-vlc>=3.0.21203",
+  "pywinauto>=0.6.9",
+  "rich>=14.2.0",
+  "selenium>=4.38.0",
+  "tk>=0.1.0",
 ]
 
 [dependency-groups]
-dev = [
-    "pre-commit>=4.3.0",
-    "pyright>=1.1.407",
-    "ruff>=0.14.2",
-]
+dev = ["prek>=0.3.0", "ruff>=0.14.2", "ty>=0.0.13"]
 
 [project.scripts]
 harness = "harness:main"
@@ -39,15 +35,11 @@ build-backend = "uv_build"
 [tool.ruff]
 line-length = 120
 lint.select = [
-    "ALL", # include all the rules, including new ones
+  "ALL", # include all the rules, including new ones
 ]
 lint.ignore = [
-    "D", # missing docstrings
-    "FBT003", # boolean positional value in function call
-    "COM812", # missing trailing comma, conflict with formatter
+  "D",      # missing docstrings
+  "COM812", # missing trailing comma, conflict with formatter
 ]
 # https://github.com/astral-sh/ruff-vscode/blob/main/README.md#configuring-vs-code
 lint.extend-select = ["I"]
-
-[tool.pyright]
-typeCheckingMode = "standard"

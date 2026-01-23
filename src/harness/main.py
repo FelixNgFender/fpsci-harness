@@ -76,7 +76,7 @@ def conduct(conduct_settings: settings.ConductSettings) -> None:
         ]
     logger.info("conduting participant schedule %s", participant_schedule)
 
-    pyautogui.FAILSAFE = conduct_settings.pyautogui_failsafe
+    pyautogui.FAILSAFE = conduct_settings.pyautogui_failsafe  # ty: ignore[invalid-assignment]
     process.start_epic_games_or_stop_if_not_exists()
     process.start_steam_or_stop_if_not_exists()
     current_dt = utils.get_current_datetime()
