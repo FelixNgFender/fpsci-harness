@@ -151,8 +151,6 @@ def is_not_underwater() -> bool:
 
 
 def is_not_in_escape_menu() -> bool:
-    return pyautogui.pixel(166, 980) != (0, 42, 59) and pyautogui.pixel(91, 975) != (
-        0,
-        42,
-        59,
+    return (not pyautogui.pixelMatchesColor(1352, 67, (4, 29, 40), tolerance=10)) and (
+        not pyautogui.pixelMatchesColor(1452, 66, (4, 29, 40), tolerance=10)
     )

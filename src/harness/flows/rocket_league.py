@@ -96,7 +96,7 @@ def play_round(
     logger.info("collected round result")
 
     # exit match, save replay and return to main menu
-    pyautogui.press("esc")  # pop up options
+    pyautogui.press("esc", interval=1)  # pop up options
     pyautogui.click(975, 680, interval=0.2)  # enter leave match
     pyautogui.click(858, 617, interval=2)  # confirm leave match
     pyautogui.click(207, 695, interval=0.2)  # profile
