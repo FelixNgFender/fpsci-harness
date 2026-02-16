@@ -1,7 +1,7 @@
 outcome,comparison,cohens_d,n_baseline,n_comparison
-Performance (z),0ms vs 75.0ms,0.21202925124309682,76,75
-Performance (z),0ms vs 150.0ms,0.6743141035733713,76,75
-Performance (z),0ms vs 225.0ms,1.3669358714307798,76,74
-QoE Quality,0ms vs 75.0ms,0.895667155192816,76,75
-QoE Quality,0ms vs 150.0ms,1.6338568479567266,76,74
-QoE Quality,0ms vs 225.0ms,2.7078491785183294,76,74
+Performance (z),0ms vs 75ms,0.5290710918432225,122,122
+Performance (z),0ms vs 150ms,1.19968456393218,122,122
+Performance (z),0ms vs 225ms,1.7150436085596958,122,122
+QoE Quality,0ms vs 75ms,0.792779417549965,122,122
+QoE Quality,0ms vs 150ms,1.3665661195031915,122,121
+QoE Quality,0ms vs 225ms,2.2004294604109966,122,122

@@ -1,15 +1,15 @@
          Mixed Linear Model Regression Results
 =======================================================
 Model:            MixedLM Dependent Variable: score_z  
-No. Observations: 300     Method:             REML     
-No. Groups:       17      Scale:              0.7621   
-Min. group size:  8       Log-Likelihood:     -396.1750
+No. Observations: 488     Method:             REML     
+No. Groups:       27      Scale:              0.5674   
+Min. group size:  8       Log-Likelihood:     -582.9408
 Max. group size:  20      Converged:          Yes      
-Mean group size:  17.6                                 
+Mean group size:  18.1                                 
 -------------------------------------------------------
-             Coef.  Std.Err.   z    P>|z| [0.025 0.975]
+            Coef.  Std.Err.    z    P>|z| [0.025 0.975]
 -------------------------------------------------------
-Intercept     0.596    0.093  6.429 0.000  0.414  0.778
-latency_ms   -0.005    0.001 -8.942 0.000 -0.007 -0.004
-Group Var     0.025    0.030                           
+Intercept    0.736    0.088   8.344 0.000  0.563  0.909
+latency_ms  -0.007    0.000 -16.388 0.000 -0.007 -0.006
+Group Var    0.121    0.059                            
 =======================================================

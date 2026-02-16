@@ -1,16 +1,16 @@
            Mixed Linear Model Regression Results
 ============================================================
 Model:            MixedLM Dependent Variable: quality_rating
-No. Observations: 299     Method:             REML          
-No. Groups:       17      Scale:              0.9554        
-Min. group size:  8       Log-Likelihood:     -435.6494     
+No. Observations: 487     Method:             REML          
+No. Groups:       27      Scale:              0.9631        
+Min. group size:  8       Log-Likelihood:     -708.4202     
 Max. group size:  20      Converged:          Yes           
-Mean group size:  17.6                                      
+Mean group size:  18.0                                      
 -------------------------------------------------------------
              Coef.   Std.Err.     z     P>|z|  [0.025  0.975]
 -------------------------------------------------------------
-Intercept     4.485     0.134   33.453  0.000   4.222   4.748
-latency_ms   -0.011     0.001  -13.847  0.000  -0.012  -0.009
-score_z       0.128     0.066    1.948  0.051  -0.001   0.257
-Group Var     0.127     0.067                                
+Intercept     4.318     0.114   37.782  0.000   4.094   4.542
+latency_ms   -0.008     0.001  -12.094  0.000  -0.009  -0.007
+score_z       0.250     0.059    4.208  0.000   0.133   0.366
+Group Var     0.151     0.059                                
 ============================================================
