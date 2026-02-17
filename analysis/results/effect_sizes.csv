@@ -1,7 +1,0 @@
-outcome,comparison,cohens_d,n_baseline,n_comparison
-Performance (z),0ms vs 75ms,0.5290710918432225,122,122
-Performance (z),0ms vs 150ms,1.19968456393218,122,122
-Performance (z),0ms vs 225ms,1.7150436085596958,122,122
-QoE Quality,0ms vs 75ms,0.792779417549965,122,122
-QoE Quality,0ms vs 150ms,1.3665661195031915,122,121
-QoE Quality,0ms vs 225ms,2.2004294604109966,122,122
